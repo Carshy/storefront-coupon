@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/lib/store/providers';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,9 +28,11 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <Providers>
+          <Header />
           <div className="min-h-screen bg-gray-50">
             {children}
           </div>
+          <Footer />
         </Providers>
       </body>
     </html>

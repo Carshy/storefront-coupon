@@ -1,105 +1,150 @@
+// src/app/page.tsx
 'use client';
 
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
-import { fetchProducts } from '../lib/store/slices/productSlice';
+import { fetchProducts, fetchCategories } from '../lib/store/slices/productSlice';
+import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
 import ProductGrid from '@/components/product/ProductGrid';
-import Link from 'next/link';
-import { ArrowRight, ShoppingBag } from 'lucide-react';
+import { Truck, Shield, Headphones, RotateCcw, Star, Users, Award } from 'lucide-react';
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
-  const { products, loading, error } = useAppSelector((state) => state.products);
+  const { products, loading } = useAppSelector((state) => state.products);
 
   useEffect(() => {
-    // Fetch limited products for homepage
-    dispatch(fetchProducts({ limit: 8 }));
+    // Fetch products and categories when component mounts
+    dispatch(fetchProducts({ limit: 12 }));
+    dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Get featured products (first 4)
-  const featuredProducts = products.slice(0, 4);
+  // Get trending products (products with high ratings)
+  const trendingProducts = products
+    .filter(product => product.rating.rate >= 4.0)
+    .slice(0, 8);
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex justify-center mb-6">
-            <ShoppingBag className="w-16 h-16" />
+      {/* Enhanced Hero Section */}
+      <EnhancedHeroSection />
+
+      {/* Features Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Truck className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Free Shipping</h3>
+              <p className="text-gray-600 text-sm">Free shipping on orders over $50</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Secure Payment</h3>
+              <p className="text-gray-600 text-sm">100% secure payment processing</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Headphones className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">24/7 Support</h3>
+              <p className="text-gray-600 text-sm">Round-the-clock customer support</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <RotateCcw className="w-8 h-8 text-orange-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Easy Returns</h3>
+              <p className="text-gray-600 text-sm">30-day return policy</p>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Welcome to Our Store
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto opacity-90">
-            Discover amazing products at unbeatable prices. Shop with confidence and enjoy fast delivery.
-          </p>
-          <Link
-            href="/products"
-            className="inline-flex items-center bg-white text-blue-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors"
-          >
-            Shop Now
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
         </div>
       </section>
 
-      {/* Featured Products Section */}
+      {/* Trending Products Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Featured Products
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              🔥 Trending Products
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Check out our most popular items, carefully selected just for you.
+              Discover what's popular right now. These highly-rated products are flying off our shelves!
             </p>
           </div>
-
-          {error ? (
-            <div className="text-center text-red-600 py-8">
-              <p>Unable to load products. Please try again later.</p>
+          
+          <ProductGrid products={trendingProducts} loading={loading} />
+          
+          {!loading && trendingProducts.length > 0 && (
+            <div className="text-center mt-12">
+              <a
+                href="/products"
+                className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-colors duration-200"
+              >
+                View All Products
+                <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
             </div>
-          ) : (
-            <ProductGrid products={featuredProducts} loading={loading} />
           )}
+        </div>
+      </section>
 
-          <div className="text-center mt-12">
-            <Link
-              href="/products"
-              className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              View All Products
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
+      {/* Stats Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="flex justify-center mb-4">
+                <Users className="w-12 h-12" />
+              </div>
+              <div className="text-4xl font-bold mb-2">10K+</div>
+              <div className="text-lg opacity-90">Happy Customers</div>
+            </div>
+            
+            <div>
+              <div className="flex justify-center mb-4">
+                <Star className="w-12 h-12" />
+              </div>
+              <div className="text-4xl font-bold mb-2">4.8</div>
+              <div className="text-lg opacity-90">Average Rating</div>
+            </div>
+            
+            <div>
+              <div className="flex justify-center mb-4">
+                <Award className="w-12 h-12" />
+              </div>
+              <div className="text-4xl font-bold mb-2">50+</div>
+              <div className="text-lg opacity-90">Awards Won</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="bg-gray-100 py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingBag className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Free Shipping</h3>
-              <p className="text-gray-600">Free shipping on orders over $50</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingBag className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
-              <p className="text-gray-600">Round-the-clock customer service</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingBag className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Secure Payment</h3>
-              <p className="text-gray-600">Your payment information is safe</p>
-            </div>
+      {/* Newsletter Section */}
+      <section className="py-16 bg-gray-900 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
+          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+            Subscribe to our newsletter and be the first to know about new products, exclusive offers, and fashion trends.
+          </p>
+          
+          <div className="max-w-md mx-auto flex gap-4">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 px-4 py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-semibold transition-colors duration-200">
+              Subscribe
+            </button>
           </div>
         </div>
       </section>
