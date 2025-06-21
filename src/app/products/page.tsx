@@ -1,0 +1,148 @@
+// src/app/products/page.tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { fetchProducts, fetchCategories, setCurrentCategory } from '../../lib/store/slices/productSlice';
+import ProductGrid from '@/components/product/ProductGrid';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import { Filter, Grid, List } from 'lucide-react';
+
+export default function ProductsPage() {
+  const dispatch = useAppDispatch();
+  const { products, categories, loading, error, currentCategory } = useAppSelector(
+    (state) => state.products
+  );
+  
+  const [sortBy, setSortBy] = useState<'asc' | 'desc'>('asc');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  useEffect(() => {
+    // Fetch products and categories on component mount
+    dispatch(fetchProducts({ sort: sortBy }));
+    dispatch(fetchCategories());
+  }, [dispatch, sortBy]);
+
+  const handleCategoryChange = (category: string | null) => {
+    dispatch(setCurrentCategory(category));
+    if (category) {
+      // Filter products by category (you can implement this in the slice)
+      const filteredProducts = products.filter(product => product.category === category);
+    } else {
+      dispatch(fetchProducts({ sort: sortBy }));
+    }
+  };
+
+  const handleSortChange = (sort: 'asc' | 'desc') => {
+    setSortBy(sort);
+    dispatch(fetchProducts({ sort }));
+  };
+
+  const filteredProducts = currentCategory
+    ? products.filter(product => product.category === currentCategory)
+    : products;
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <ErrorMessage 
+          message={error} 
+          onRetry={() => dispatch(fetchProducts({ sort: sortBy }))}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Our Products</h1>
+        <p className="text-gray-600">Discover our amazing collection of products</p>
+      </div>
+
+      {/* Filters and Controls */}
+      <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => handleCategoryChange(null)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              !currentCategory
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            All Categories
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryChange(category)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors capitalize ${
+                currentCategory === category
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Controls */}
+        <div className="flex items-center gap-4">
+          {/* Sort Control */}
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-gray-500" />
+            <select
+              value={sortBy}
+              onChange={(e) => handleSortChange(e.target.value as 'asc' | 'desc')}
+              className="border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="asc">Price: Low to High</option>
+              <option value="desc">Price: High to Low</option>
+            </select>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center border rounded-md">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-2 ${
+                viewMode === 'grid'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Grid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`p-2 ${
+                viewMode === 'list'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Products Count */}
+      <div className="mb-6">
+        <p className="text-gray-600">
+          Showing {filteredProducts.length} products
+          {currentCategory && (
+            <span className="capitalize"> in {currentCategory}</span>
+          )}
+        </p>
+      </div>
+
+      {/* Products Grid */}
+      <ProductGrid products={filteredProducts} loading={loading} />
+    </div>
+  );
+}
