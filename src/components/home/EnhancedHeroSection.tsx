@@ -166,76 +166,76 @@ export default function EnhancedHeroSection() {
 
           {/* Middle Column - Image Carousel (Flexible, larger) */}
           <div className="flex-1 min-w-0">
-  <div className="relative h-full rounded-2xl overflow-hidden group">
-    {/* Carousel Images */}
-    <div className="relative h-full">
-      {carouselData.map((item, index) => (
-        <div
-          key={item.id}
-          className={`absolute inset-0 transition-opacity duration-500 ${
-            index === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-cover"
-            priority={index === 0} // Optimize first image loading
-          />
-          
-          {/* Glassy overlay with gradient */}
-          <div className={`absolute inset-0 bg-gradient-to-t ${item.accent} opacity-30`}></div>
-          <div className="absolute inset-0 bg-black/20"></div>
-          
-          {/* Glitter effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5"></div>
-          
-          {/* Content */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-            <div className="backdrop-blur-md bg-white/10 rounded-xl p-4 border border-white/20">
-              <h3 className="text-xl font-bold mb-2 flex items-center">
-                {item.title}
-                <Sparkles className="w-5 h-5 ml-2 text-yellow-300" />
-              </h3>
-              <p className="opacity-90">{item.description}</p>
+            <div className="relative h-full rounded-2xl overflow-hidden group">
+                {/* Carousel Images */}
+                <div className="relative h-full">
+                {carouselData.map((item, index) => (
+                    <div
+                    key={item.id}
+                    className={`absolute inset-0 transition-opacity duration-500 ${
+                        index === currentSlide ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    >
+                    <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        priority={index === 0} // Optimize first image loading
+                    />
+                    
+                    {/* Glassy overlay with gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-t ${item.accent} opacity-30`}></div>
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    
+                    {/* Glitter effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5"></div>
+                    
+                    {/* Content */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <div className="backdrop-blur-md bg-white/10 rounded-xl p-4 border border-white/20">
+                        <h3 className="text-xl font-bold mb-2 flex items-center">
+                            {item.title}
+                            <Sparkles className="w-5 h-5 ml-2 text-yellow-300" />
+                        </h3>
+                        <p className="opacity-90">{item.description}</p>
+                        </div>
+                    </div>
+                    </div>
+                ))}
+                </div>
+
+                {/* Navigation Buttons */}
+                <button
+                onClick={prevSlide}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
+                aria-label="Previous slide"
+                >
+                <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                onClick={nextSlide}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
+                aria-label="Next slide"
+                >
+                <ChevronRight className="w-6 h-6" />
+                </button>
+
+                {/* Dots indicator */}
+                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+                {carouselData.map((_, index) => (
+                    <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                        index === currentSlide ? 'bg-white w-8' : 'bg-white/50'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                    />
+                ))}
+                </div>
             </div>
-          </div>
         </div>
-      ))}
-    </div>
-
-    {/* Navigation Buttons */}
-    <button
-      onClick={prevSlide}
-      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
-      aria-label="Previous slide"
-    >
-      <ChevronLeft className="w-6 h-6" />
-    </button>
-    <button
-      onClick={nextSlide}
-      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
-      aria-label="Next slide"
-    >
-      <ChevronRight className="w-6 h-6" />
-    </button>
-
-    {/* Dots indicator */}
-    <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
-      {carouselData.map((_, index) => (
-        <button
-          key={index}
-          onClick={() => setCurrentSlide(index)}
-          className={`w-2 h-2 rounded-full transition-all duration-200 ${
-            index === currentSlide ? 'bg-white w-8' : 'bg-white/50'
-          }`}
-          aria-label={`Go to slide ${index + 1}`}
-        />
-      ))}
-    </div>
-  </div>
-</div>
 
           {/* Right Column - Featured Products (Fixed width, smaller, same as left) */}
           <div className="w-full lg:w-72 flex-shrink-0"> {/* Same width as left column */}
@@ -285,15 +285,6 @@ export default function EnhancedHeroSection() {
                 </div>
               </div>
               
-              {/* View All Products Link */}
-              <div className="mt-3 text-center flex-shrink-0">
-                <Link
-                  href="/products"
-                  className="text-sm text-blue-300 hover:text-blue-200 underline transition-colors"
-                >
-                  View All Products →
-                </Link>
-              </div>
             </div>
           </div>
         </div>
