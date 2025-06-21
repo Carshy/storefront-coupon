@@ -1,5 +1,5 @@
 // src/app/layout.tsx
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/lib/store/providers';
@@ -11,11 +11,7 @@ export const metadata: Metadata = {
   description: 'A secure and modern e-commerce application built with Next.js',
   keywords: ['ecommerce', 'shopping', 'nextjs', 'typescript'],
   authors: [{ name: 'Your Name' }],
-};
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
+  viewport: 'width=device-width, initial-scale=1',
 };
 
 export default function RootLayout({
@@ -25,7 +21,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body 
+        className={`${inter.className} antialiased`}
+        suppressHydrationWarning={true}
+      >
         <Providers>
           <div className="min-h-screen bg-gray-50">
             {children}
