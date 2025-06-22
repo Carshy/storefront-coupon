@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { fetchProducts, fetchCategories } from '../lib/store/slices/productSlice';
 import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
+import HotProducts from '@/components/home/HotProducts';
 import ProductGrid from '@/components/product/ProductGrid';
 import { Truck, Shield, Headphones, RotateCcw, Star, Users, Award } from 'lucide-react';
 
@@ -26,7 +27,12 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Enhanced Hero Section */}
-      <EnhancedHeroSection />
+      <div>
+        <EnhancedHeroSection />
+      </div>
+      <div>
+        <HotProducts />
+      </div>
 
       {/* Features Section */}
       <section className="py-16 bg-gray-50">
