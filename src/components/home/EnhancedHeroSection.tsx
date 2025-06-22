@@ -94,7 +94,7 @@ export default function EnhancedHeroSection() {
   };
 
   return (
-    <section className="text-white py-4 lg:py-6 overflow-hidden">
+    <section className="text-white py-4 lg:pt-6 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Responsive Layout - Stack on mobile, grid on larger screens */}
         <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 mb-3 lg:h-[18rem]">

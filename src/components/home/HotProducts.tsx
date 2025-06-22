@@ -8,7 +8,7 @@ import { fetchProducts } from '../../lib/store/slices/productSlice';
 
 export default function HotProducts() {
   const dispatch = useAppDispatch();
-  const { products, error } = useAppSelector((state) => state.products);
+  const { products, loading, error } = useAppSelector((state) => state.products);
         
   // Filter jewelry products
   const jewelryProducts = products.filter(product => 
@@ -59,12 +59,11 @@ export default function HotProducts() {
     );
   }
 
-  if (jewelryProducts.length === 0) {
+  if (loading) {
     return (
       <section className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center">
         <div className="text-center py-12 px-6">
-          <p className="text-gray-800 text-lg font-medium">No jewelry products available</p>
-          <p className="text-gray-500 text-sm mt-2">Check back soon for amazing deals</p>
+          <p className="text-gray-500 text-sm mt-2">Loading...</p>
         </div>
       </section>
     );

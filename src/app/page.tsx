@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { fetchProducts, fetchCategories } from '../lib/store/slices/productSlice';
 import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
 import HotProducts from '@/components/home/HotProducts';
+import Spotlight from '@/components/home/spotlight';
 import ProductGrid from '@/components/product/ProductGrid';
 import { Truck, Shield, Headphones, RotateCcw, Star, Users, Award } from 'lucide-react';
 
@@ -32,6 +33,9 @@ export default function HomePage() {
       </div>
       <div>
         <HotProducts />
+      </div>
+      <div>
+        <Spotlight />
       </div>
 
       {/* Features Section */}
