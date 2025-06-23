@@ -94,14 +94,14 @@ export default function EnhancedHeroSection() {
   };
 
   return (
-    <section className="text-white py-4 lg:pt-6 overflow-hidden">
+    <section className="text-white py-2 lg:pt-6 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Responsive Layout - Stack on mobile, grid on larger screens */}
-        <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 mb-3 lg:h-[18rem]">
+        <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 mb-1 lg:h-[19rem]">
           
           {/* Left Column - Offers (Fixed height for large devices) */}
           <div className="lg:col-span-3 w-full lg:min-h-[18rem]">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-50/80 to-pink-50/80 backdrop-blur-sm p-3 sm:p-4 transform hover:scale-[1.02] transition-all duration-500 cursor-pointer group shadow-lg hover:shadow-xl border border-white/50 h-[280px] sm:h-[320px] lg:h-full flex flex-col">
+            <div className="relative overflow-hidden rounded-3xl bg-gray-200 p-3 sm:p-4 transform hover:scale-[1.02] transition-all duration-500 cursor-pointer group h-[280px] sm:h-[320px] lg:h-full flex flex-col">
               {/* Subtle overlay */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-transparent to-white/20"></div>
               
