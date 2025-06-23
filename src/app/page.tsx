@@ -22,7 +22,7 @@ export default function HomePage() {
 
   // Get trending products (products with high ratings)
   const trendingProducts = products
-    .filter(product => product.rating.rate >= 4.0)
+    .filter(product => product.rating.rate >= 3.5)
     .slice(0, 8);
 
   return (
@@ -95,7 +95,7 @@ export default function HomePage() {
             <div className="text-center mt-12">
               <a
                 href="/products"
-                className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-colors duration-200"
+                className="inline-flex items-center bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold transition-colors duration-200"
               >
                 View All Products
                 <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +108,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <section className="py-16 bg-orange-500 text-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
@@ -134,27 +134,6 @@ export default function HomePage() {
               <div className="text-4xl font-bold mb-2">50+</div>
               <div className="text-lg opacity-90">Awards Won</div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Subscribe to our newsletter and be the first to know about new products, exclusive offers, and fashion trends.
-          </p>
-          
-          <div className="max-w-md mx-auto flex gap-4">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-semibold transition-colors duration-200">
-              Subscribe
-            </button>
           </div>
         </div>
       </section>

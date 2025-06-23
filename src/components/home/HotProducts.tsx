@@ -76,7 +76,7 @@ export default function HotProducts() {
         <div className="text-center mb-8">
   <div className="relative inline-block">
     {/* Premium Badge */}
-    <div className="absolute -top-4 -right-6 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full animate-pulse z-10">
+    <div className="absolute -top-4 -right-6 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full animate-pulse z-10">
       LIMITED
     </div>
     
