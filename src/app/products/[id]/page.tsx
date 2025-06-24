@@ -4,12 +4,21 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import Image from 'next/image';
+import Link from 'next/link';
 import { 
   fetchProductById, 
   clearCurrentProduct, 
   clearCurrentProductError 
 } from '@/lib/store/slices/productSlice';
-import { Star, ShoppingCart, ArrowLeft, Heart, Share2, Plus, Minus } from 'lucide-react';
+import { 
+  addToCart, 
+  optimisticAddToCart,
+  selectCartItemQuantity,
+  selectCartLoading,
+  selectCartError,
+  clearCartError
+} from '@/lib/store/slices/cartSlice';
+import { Star, ShoppingCart, ArrowLeft, Heart, Share2, Plus, Minus, Check, Loader2 } from 'lucide-react';
 
 export default function ProductDetailsPage() {
   const params = useParams();
@@ -23,8 +32,16 @@ export default function ProductDetailsPage() {
     currentProductError: error
   } = useAppSelector((state) => state.products);
 
+  // Get cart data from Redux store
+  const cartItemQuantity = useAppSelector((state) => 
+    product ? selectCartItemQuantity(product.id)(state) : 0
+  );
+  const cartLoading = useAppSelector(selectCartLoading);
+  const cartError = useAppSelector(selectCartError);
+
   // Local state for UI interactions
   const [quantity, setQuantity] = useState(1);
+  const [showAddedToCart, setShowAddedToCart] = useState(false);
 
   useEffect(() => {
     const productId = params.id;
@@ -49,6 +66,13 @@ export default function ProductDetailsPage() {
     };
   }, [params.id, dispatch]);
 
+  // Clear cart error when component mounts
+  useEffect(() => {
+    if (cartError) {
+      dispatch(clearCartError());
+    }
+  }, [dispatch, cartError]);
+
   // Calculate total price based on quantity
   const calculateTotalPrice = () => {
     if (!product) return 0;
@@ -56,7 +80,7 @@ export default function ProductDetailsPage() {
   };
 
   // Format price with currency
-  const formatPrice = (price) => {
+  const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -64,41 +88,92 @@ export default function ProductDetailsPage() {
   };
 
   // Handle quantity changes with validation
-  const handleQuantityChange = (change) => {
+  const handleQuantityChange = (change: number): void => {
     const newQuantity = quantity + change;
     
     // Ensure quantity is at least 1 and at most 99 (reasonable limit)
-    if (newQuantity >= 1 && newQuantity <= 99) {
+    if (newQuantity >= 1 && newQuantity <= 100) {
       setQuantity(newQuantity);
     }
   };
 
   // Direct quantity input handler
-  const handleQuantityInput = (value) => {
+  const handleQuantityInput = (value: string): void => {
     const numValue = parseInt(value);
     if (!isNaN(numValue) && numValue >= 1 && numValue <= 99) {
       setQuantity(numValue);
     }
   };
 
-  const handleAddToCart = () => {
+  // Enhanced add to cart handler with Redux and navigation
+  const handleAddToCart = async () => {
     if (!product) return;
     
-    const cartItem = {
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      image: product.image,
-      quantity: quantity,
-      totalPrice: calculateTotalPrice()
-    };
+    try {
+      // Optimistic update for better UX
+      dispatch(optimisticAddToCart({ product, quantity }));
+      
+      // Dispatch the async action
+      const result = await dispatch(addToCart({ 
+        product, 
+        quantity,
+        // TODO: Add userId when authentication is implemented
+        // userId: currentUser?.id 
+      }));
+      
+      if (addToCart.fulfilled.match(result)) {
+        // Show success feedback
+        setShowAddedToCart(true);
+        setTimeout(() => setShowAddedToCart(false), 3000);
+        
+        // Reset quantity to 1 after successful add
+        setQuantity(1);
+        
+        console.log(`Successfully added ${quantity} x ${product.title} to cart`);
+        
+        // Navigate to cart page after successful addition
+        router.push('/cart');
+      } else {
+        // Handle error case
+        console.error('Failed to add to cart:', result.payload);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
+  // Alternative method: Add to cart without navigation
+  const handleAddToCartOnly = async () => {
+    if (!product) return;
     
-    // TODO: Implement cart functionality with Redux
-    // dispatch(addToCart(cartItem));
-    console.log('Adding to cart:', cartItem);
-    
-    // Optional: Show success notification
-    alert(`Added ${quantity} x ${product.title} to cart\nTotal: ${formatPrice(calculateTotalPrice())}`);
+    try {
+      // Optimistic update for better UX
+      dispatch(optimisticAddToCart({ product, quantity }));
+      
+      // Dispatch the async action
+      const result = await dispatch(addToCart({ 
+        product, 
+        quantity,
+        // TODO: Add userId when authentication is implemented
+        // userId: currentUser?.id 
+      }));
+      
+      if (addToCart.fulfilled.match(result)) {
+        // Show success feedback
+        setShowAddedToCart(true);
+        setTimeout(() => setShowAddedToCart(false), 3000);
+        
+        // Reset quantity to 1 after successful add
+        setQuantity(1);
+        
+        console.log(`Successfully added ${quantity} x ${product.title} to cart`);
+      } else {
+        // Handle error case
+        console.error('Failed to add to cart:', result.payload);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
   const handleWishlist = () => {
@@ -195,6 +270,27 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Success notification */}
+      {showAddedToCart && (
+        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-right duration-300">
+          <Check className="w-5 h-5" />
+          Added to cart successfully!
+        </div>
+      )}
+
+      {/* Cart error notification */}
+      {cartError && (
+        <div className="fixed top-4 right-4 z-50 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-right duration-300">
+          <span>Error: {cartError}</span>
+          <button 
+            onClick={() => dispatch(clearCartError())}
+            className="ml-2 text-white hover:text-gray-200"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Back Button */}
       <button
         onClick={() => router.back()}
@@ -248,6 +344,14 @@ export default function ProductDetailsPage() {
             <span className="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full capitalize mb-4">
               {product.category}
             </span>
+
+            {/* Cart status indicator */}
+            {cartItemQuantity > 0 && (
+              <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 text-sm px-3 py-1 rounded-full mb-4">
+                <ShoppingCart className="w-4 h-4" />
+                {cartItemQuantity} in cart
+              </div>
+            )}
           </div>
 
           {/* Pricing Section - Enhanced */}
@@ -337,13 +441,24 @@ export default function ProductDetailsPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-4">
+              {/* Option 1: Add to cart and navigate */}
               <button
                 onClick={handleAddToCart}
-                className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                aria-label={`Add ${quantity} ${product.title} to cart for ${formatPrice(calculateTotalPrice())}`}
+                disabled={cartLoading}
+                className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                aria-label={`Add ${quantity} ${product.title} to cart for ${formatPrice(calculateTotalPrice())} and go to cart`}
               >
-                <ShoppingCart className="w-5 h-5" />
-                Add to Cart - {formatPrice(calculateTotalPrice())}
+                {cartLoading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5" />
+                    Add to Cart & Go - {formatPrice(calculateTotalPrice())}
+                  </>
+                )}
               </button>
               
               <button 
@@ -361,6 +476,27 @@ export default function ProductDetailsPage() {
               >
                 <Share2 className="w-5 h-5 text-gray-600 group-hover:text-blue-500 transition-colors" />
               </button>
+            </div>
+
+            {/* Alternative: Separate buttons for different actions */}
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={handleAddToCartOnly}
+                disabled={cartLoading}
+                className="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                aria-label={`Add ${quantity} ${product.title} to cart only`}
+              >
+                <ShoppingCart className="w-4 h-4" />
+                Add to Cart Only
+              </button>
+              
+              <Link 
+                href="/cart"
+                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                View Cart
+              </Link>
             </div>
           </div>
 
