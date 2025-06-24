@@ -97,7 +97,7 @@ export default function EnhancedHeroSection() {
     <section className="text-white py-2 lg:pt-6 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Responsive Layout - Stack on mobile, grid on larger screens */}
-        <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 mb-1 lg:h-[19rem]">
+        <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 mb-4 lg:h-[19rem]">
           
           {/* Left Column - Offers (Fixed height for large devices) */}
           <div className="lg:col-span-3 w-full lg:min-h-[18rem]">
@@ -240,10 +240,10 @@ export default function EnhancedHeroSection() {
                     
                     {/* Content - Properly positioned to avoid overlap with dots */}
                     <div className="absolute bottom-0 left-0 right-0 pb-8 sm:pb-10 lg:pb-12 px-2 sm:px-3 lg:px-4 text-white">
-                      <div className="backdrop-blur-md bg-white/10 rounded-xl p-2 sm:p-3 border border-white/20">
+                      <div className="bg-black/40 rounded-xl p-2 sm:p-3 border border-white/20">
                         <h3 className="text-sm sm:text-base lg:text-lg font-bold mb-1 flex items-center leading-tight">
                           {item.title}
-                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 text-yellow-300 flex-shrink-0" />
+                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 text-orange-500 flex-shrink-0" />
                         </h3>
                         <p className="opacity-90 text-xs sm:text-sm leading-relaxed line-clamp-2">
                           {item.description}
@@ -349,7 +349,7 @@ export default function EnhancedHeroSection() {
                                 {formatPrice(product.price)}
                               </div>
                               <div className="flex items-center justify-center space-x-1">
-                                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-500 fill-current flex-shrink-0" />
+                                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-500 fill-current flex-shrink-0" />
                                 <span className="text-[9px] sm:text-xs text-gray-600 font-medium">
                                   {product.rating.rate.toFixed(1)}
                                 </span>

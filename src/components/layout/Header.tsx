@@ -109,7 +109,7 @@ export default function Header() {
                 onClick={() => handleCategoryClick(null)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   !currentCategory && isProductsPage
-                    ? 'bg-blue-600 text-white shadow-md'
+                    ? 'bg-orange-500 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                 }`}
               >
@@ -123,7 +123,7 @@ export default function Header() {
                   onClick={() => handleCategoryClick(category)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors capitalize ${
                     currentCategory === category && isProductsPage
-                      ? 'bg-blue-600 text-white shadow-md'
+                      ? 'bg-orange-500 text-white shadow-md'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                   }`}
                 >

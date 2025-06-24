@@ -84,15 +84,15 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
             <div className="space-y-3">
               <div className="flex items-center">
-                <MapPin className="w-4 h-4 mr-2 text-blue-400" />
+                <MapPin className="w-4 h-4 mr-2 text-orange-500" />
                 <span className="text-gray-300 text-sm">123 Commerce St, City, State 12345</span>
               </div>
               <div className="flex items-center">
-                <Phone className="w-4 h-4 mr-2 text-blue-400" />
+                <Phone className="w-4 h-4 mr-2 text-orange-500" />
                 <span className="text-gray-300 text-sm">+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center">
-                <Mail className="w-4 h-4 mr-2 text-blue-400" />
+                <Mail className="w-4 h-4 mr-2 text-orange-500" />
                 <span className="text-gray-300 text-sm">support@luxeline.com</span>
               </div>
             </div>

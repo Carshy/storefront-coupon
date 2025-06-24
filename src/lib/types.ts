@@ -20,6 +20,13 @@ export interface ProductsState {
   currentCategory: string | null;
 }
 
+// Enhanced state to include single product
+export interface EnhancedProductsState extends ProductsState {
+  currentProduct: Product | null;
+  currentProductLoading: boolean;
+  currentProductError: string | null;
+}
+
 // Cart related types
 export interface CartItem {
   product: Product;
