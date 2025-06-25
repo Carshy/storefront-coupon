@@ -10,6 +10,7 @@ import {
   Sparkles,
   Star
 } from 'lucide-react';
+
 import img1 from '../../app/media/img1.jpg';
 import img2 from '../../app/media/img2.jpg';
 import img3 from '../../app/media/img3.png';
@@ -100,114 +101,119 @@ export default function EnhancedHeroSection() {
         <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-6 mb-4 lg:h-[19rem]">
           
           {/* Left Column - Offers (Fixed height for large devices) */}
-          <div className="lg:col-span-3 w-full lg:min-h-[18rem]">
-            <div className="relative overflow-hidden rounded-3xl bg-gray-200 p-3 sm:p-4 transform hover:scale-[1.02] transition-all duration-500 cursor-pointer group h-[280px] sm:h-[320px] lg:h-full flex flex-col">
-              {/* Subtle overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/30 via-transparent to-white/20"></div>
+          <div className="lg:col-span-3 w-full lg:min-h-[19rem]">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 p-[3%] transform hover:scale-[1.02] transition-all duration-700 cursor-pointer group h-[280px] sm:h-[320px] lg:h-full flex flex-col shadow-lg hover:shadow-2xl min-h-0">
               
-              {/* Sparkle effect */}
-              <div className="absolute top-3 right-3 opacity-30 group-hover:opacity-50 transition-all duration-300">
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+              {/* Enhanced gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-slate-200/30"></div>
+              
+              {/* Premium sparkle effect */}
+              <div className="absolute top-[4%] right-[4%] opacity-40 group-hover:opacity-70 transition-all duration-500 animate-pulse">
+                <Sparkles className="w-[clamp(1rem,4vw,1.5rem)] h-[clamp(1rem,4vw,1.5rem)] text-indigo-400" />
               </div>
               
-              {/* Subtle decorative elements */}
-              <div className="absolute top-2 left-2 w-1 h-1 bg-gray-300/40 rounded-full"></div>
-              <div className="absolute bottom-2 right-6 w-1 h-1 bg-gray-400/30 rounded-full"></div>
+              {/* Sophisticated decorative elements */}
+              <div className="absolute top-[3%] left-[3%] w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)] bg-gradient-to-r from-indigo-300 to-purple-300 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-[3%] right-[8%] w-[clamp(0.375rem,1vw,0.5rem)] h-[clamp(0.375rem,1vw,0.5rem)] bg-gradient-to-r from-rose-300 to-pink-300 rounded-full"></div>
+              <div className="absolute top-1/2 left-[2%] w-[clamp(0.25rem,0.8vw,0.375rem)] h-[clamp(0.25rem,0.8vw,0.375rem)] bg-gradient-to-r from-emerald-300 to-teal-300 rounded-full"></div>
               
-              {/* Content - Properly sized to fit container */}
-              <div className="relative z-10 flex flex-col h-full space-y-2 sm:space-y-3">
+              {/* Content with enhanced spacing */}
+              <div className="relative z-10 flex flex-col h-full space-y-[2%] min-h-0 overflow-hidden">
                 
-                {/* First Section - Offers - Flexible sizing */}
-                <div className="flex items-center justify-center bg-white p-2 sm:p-3 rounded-lg flex-shrink-0">
+                {/* Premium Offers Section - Fixed proportion */}
+                <div className="flex items-center justify-center bg-gradient-to-r from-white via-white to-gray-50 p-[2%] rounded-2xl flex-shrink-0 shadow-md border border-gray-100/80 backdrop-blur-sm min-h-0">
+                  
                   {/* First Offer */}
-                  <div className="flex flex-col items-center space-y-0.5 flex-1">
+                  <div className="flex flex-col items-center space-y-[0.5%] flex-1 hover:scale-105 transition-transform duration-300 min-w-0">
                     <div className="relative flex items-start">
-                      <span className="text-base sm:text-lg lg:text-xl font-black text-gray-900">10</span>
-                      <div className="flex flex-col justify-center items-center ml-1">
-                        <span className="text-xs sm:text-sm font-black text-gray-900 leading-none">%</span>
-                        <span className="text-[9px] sm:text-xs text-gray-600 leading-none">off</span>
+                      <span className="text-[clamp(1.2rem,5vw,2.5rem)] font-black bg-gray-700 bg-clip-text text-transparent leading-none">10</span>
+                      <div className="flex flex-col justify-center items-center ml-[0.25rem]">
+                        <span className="text-[clamp(0.75rem,3vw,1.2rem)] font-black bg-gray-700 bg-clip-text text-transparent leading-none">%</span>
+                        <span className="text-[clamp(0.6rem,2.5vw,0.9rem)] text-gray-600 leading-none font-semibold">off</span>
                       </div>
                     </div>
-                    <span className="text-[9px] sm:text-xs text-gray-500">over $67</span>
+                    <span className="text-[clamp(0.6rem,2vw,0.8rem)] text-gray-500 font-medium whitespace-nowrap">over $67</span>
                   </div>
                   
-                  {/* Separator */}
-                  <div className="h-4 sm:h-6 lg:h-8 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-1.5 sm:mx-2"></div>
+                  {/* Enhanced Separator */}
+                  <div className="h-[clamp(1.5rem,6vw,3rem)] w-px bg-gradient-to-b from-transparent via-indigo-200 to-transparent mx-[1%] flex-shrink-0"></div>
                   
                   {/* Second Offer */}
-                  <div className="flex flex-col items-center space-y-0.5 flex-1">
+                  <div className="flex flex-col items-center space-y-[0.5%] flex-1 hover:scale-105 transition-transform duration-300 min-w-0">
                     <div className="relative flex items-start">
-                      <span className="text-base sm:text-lg lg:text-xl font-black text-gray-900">15</span>
-                      <div className="flex flex-col justify-center items-center ml-1">
-                        <span className="text-xs sm:text-sm font-black text-gray-900 leading-none">%</span>
-                        <span className="text-[9px] sm:text-xs text-gray-600 leading-none">off</span>
+                      <span className="text-[clamp(1.2rem,5vw,2.5rem)] font-black bg-green-500 bg-clip-text text-transparent leading-none">15</span>
+                      <div className="flex flex-col justify-center items-center ml-[0.25rem]">
+                        <span className="text-[clamp(0.75rem,3vw,1.2rem)] font-black bg-green-500 bg-clip-text text-transparent leading-none">%</span>
+                        <span className="text-[clamp(0.6rem,2.5vw,0.9rem)] text-gray-600 leading-none font-semibold">off</span>
                       </div>
                     </div>
-                    <span className="text-[9px] sm:text-xs text-gray-500">over $100</span>
+                    <span className="text-[clamp(0.6rem,2vw,0.8rem)] text-gray-500 font-medium whitespace-nowrap">over $100</span>
                   </div>
                   
-                  <div className="h-4 sm:h-6 lg:h-8 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-1.5 sm:mx-2"></div>
+                  <div className="h-[clamp(1.5rem,6vw,3rem)] w-px bg-gradient-to-b from-transparent via-emerald-200 to-transparent mx-[1%] flex-shrink-0"></div>
                   
                   {/* Third Offer */}
-                  <div className="flex flex-col items-center space-y-0.5 flex-1">
+                  <div className="flex flex-col items-center space-y-[0.5%] flex-1 hover:scale-105 transition-transform duration-300 min-w-0">
                     <div className="relative flex items-start">
-                      <span className="text-base sm:text-lg lg:text-xl font-black text-gray-900">25</span>
-                      <div className="flex flex-col justify-center items-center ml-1">
-                        <span className="text-xs sm:text-sm font-black text-gray-900 leading-none">%</span>
-                        <span className="text-[9px] sm:text-xs text-gray-600 leading-none">off</span>
+                      <span className="text-[clamp(1.2rem,5vw,2.5rem)] font-black bg-orange-500 bg-clip-text text-transparent leading-none">25</span>
+                      <div className="flex flex-col justify-center items-center ml-[0.25rem]">
+                        <span className="text-[clamp(0.75rem,3vw,1.2rem)] font-black bg-orange-500 bg-clip-text text-transparent leading-none">%</span>
+                        <span className="text-[clamp(0.6rem,2.5vw,0.9rem)] text-gray-600 leading-none font-semibold">off</span>
                       </div>
                     </div>
-                    <span className="text-[9px] sm:text-xs text-gray-500">over $200</span>
+                    <span className="text-[clamp(0.6rem,2vw,0.8rem)] text-gray-500 font-medium whitespace-nowrap">over $200</span>
                   </div>
                 </div>
                 
-                {/* Second Section - Code - Compact sizing */}
-                <div className="flex flex-col sm:flex-row items-center justify-center space-y-1 sm:space-y-0 sm:space-x-2 py-1.5 sm:py-2 flex-shrink-0">
-                  <span className="text-xs sm:text-sm font-medium text-gray-700">Code:</span>
+                {/* Enhanced Code Section - Fixed proportion */}
+                <div className="flex flex-col sm:flex-row items-center justify-center space-y-[1%] sm:space-y-0 sm:space-x-[2%] py-[1%] flex-shrink-0 min-h-0">
+                  <span className="text-[clamp(0.75rem,2.5vw,1rem)] font-semibold text-gray-700 whitespace-nowrap">Code:</span>
                   <div className="relative group/tooltip">
-                    <span className="bg-white/80 border border-gray-200 px-2 sm:px-3 py-1 rounded-lg cursor-pointer hover:bg-white hover:shadow-sm transition-all font-mono text-xs sm:text-sm font-semibold text-gray-800 tracking-wider">
+                    <span className="bg-gradient-to-r from-white to-gray-50 border-2 border-indigo-200 px-[2%] py-[1%] rounded-xl cursor-pointer hover:from-indigo-50 hover:to-white hover:shadow-lg hover:border-indigo-300 transition-all duration-300 font-mono text-[clamp(0.8rem,2.5vw,1.1rem)] font-bold text-gray-800 tracking-widest transform hover:scale-105">
                       SAVE15
                     </span>
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap shadow-lg z-50">
+                    {/* Enhanced Tooltip */}
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-[0.5rem] px-[0.75rem] py-[0.5rem] bg-gray-900 text-white text-[clamp(0.6rem,1.8vw,0.75rem)] rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 whitespace-nowrap shadow-xl z-50 backdrop-blur-sm">
                       Click to copy
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-gray-800"></div>
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                     </div>
                   </div>
-                  <div className="text-[9px] sm:text-xs text-gray-600 font-medium">
-                    max <span className="font-semibold text-gray-700">40%</span>
+                  <div className="text-[clamp(0.65rem,2vw,0.85rem)] text-green-500 font-semibold bg-gray-100 px-[1%] py-[0.5%] rounded-lg whitespace-nowrap">
+                    max <span className="font-bold text-orange-500">40%</span>
                   </div>
                 </div>
                 
-                {/* Third Section - LuxeLine Club - Takes remaining space */}
-                <div className="flex-1 flex flex-col justify-center space-y-2 sm:space-y-3 min-h-0">
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full flex items-center justify-center shadow-sm">
-                      <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-white" />
+                {/* Premium LuxeLine Club Section - Flexible */}
+                <div className="flex-1 flex flex-col justify-center space-y-[2%] min-h-0 overflow-hidden">
+                  <div className="flex items-center justify-center space-x-[2%]">
+                    <div className="w-[clamp(1.2rem,4vw,1.8rem)] h-[clamp(1.2rem,4vw,1.8rem)] bg-orange-500 rounded-full flex items-center justify-center shadow-lg transform hover:rotate-12 transition-transform duration-300 flex-shrink-0">
+                      <Star className="w-[60%] h-[60%] text-white" />
                     </div>
-                    <span className="font-bold text-sm sm:text-base text-gray-800 tracking-wide">LuxeLine Club</span>
+                    <span className="font-bold text-[clamp(0.9rem,3vw,1.3rem)] bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent tracking-wide whitespace-nowrap">LuxeLine Club</span>
                   </div>
                   
-                  {/* Call to action */}
-                  <div className="bg-gradient-to-r from-white/90 to-gray-50/90 rounded-xl p-2 sm:p-3 border border-gray-200/60 shadow-sm">
-                    <div className="text-center space-y-1.5">
-                      <div className="text-xs sm:text-sm font-medium text-gray-700">
-                        Extra discount for <span className="font-bold text-gray-900">100k+</span> items!
+                  {/* Enhanced Call to Action */}
+                  <div className="bg-gradient-to-r from-white via-gray-50 to-white rounded-2xl p-[3%] border-2 border-gray-200/80 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm min-h-0">
+                    <div className="text-center space-y-[2%]">
+                      <div className="text-[clamp(0.75rem,2.5vw,1rem)] font-semibold text-gray-700">
+                        Extra discount for <span className="font-black text-gray-700 text-[clamp(0.9rem,3vw,1.2rem)]">100k+</span> items!
                       </div>
-                      <div className="flex items-center justify-center group/cta cursor-pointer">
-                        <span className="text-xs sm:text-sm font-bold text-gray-800 tracking-wide">Unlock Savings</span>
-                        <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 text-gray-600 transform group-hover/cta:translate-x-1 transition-transform" />
+                      <div className="flex items-center justify-center group/cta cursor-pointer bg-gray-700 text-white px-[4%] py-[2%] rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+                        <span className="text-[clamp(0.75rem,2.5vw,1rem)] font-bold tracking-wide whitespace-nowrap">Unlock Savings</span>
+                        <ChevronRight className="w-[clamp(0.8rem,2.5vw,1.2rem)] h-[clamp(0.8rem,2.5vw,1.2rem)] ml-[0.5rem] text-white transform group-hover/cta:translate-x-1 transition-transform duration-300 flex-shrink-0" />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               
-              {/* Refined border */}
-              <div className="absolute inset-0 rounded-3xl border border-gray-200/60 group-hover:border-gray-300/80 transition-all duration-300"></div>
+              {/* Premium border with gradient */}
+              <div className="absolute inset-0 rounded-3xl border-2 border-transparent bg-gradient-to-r from-indigo-200/50 via-purple-200/50 to-rose-200/50 group-hover:from-indigo-300/60 group-hover:via-purple-300/60 group-hover:to-rose-300/60 transition-all duration-500" style={{padding: '1px'}}>
+                <div className="w-full h-full rounded-3xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100"></div>
+              </div>
               
-              {/* Subtle inner highlight */}
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.05)'}}></div>
+              {/* Sophisticated inner glow */}
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 -2px 8px rgba(255, 255, 255, 0.5)'}}></div>
             </div>
           </div>
 

@@ -30,6 +30,8 @@ import {
   ShoppingBag,
   RefreshCw
 } from 'lucide-react';
+import LogoutDialog from '../../components/auth/LogoutDialog';
+import LoginDialog from '../../components/auth/LoginDialog';
 
 export default function ShoppingCartPage() {
   const router = useRouter();
@@ -46,6 +48,8 @@ export default function ShoppingCartPage() {
   // Local state for UI interactions
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   // Load cart on component mount
   useEffect(() => {
@@ -116,11 +120,38 @@ export default function ShoppingCartPage() {
     }
   };
 
-  // Handle checkout (placeholder)
+  // Handle checkout - now opens logout dialog
   const handleCheckout = () => {
-    // TODO: Implement checkout functionality
-    console.log('Proceeding to checkout with items:', cartItems);
-    alert('Checkout functionality coming soon!');
+    setShowLogoutDialog(true);
+  };
+
+  // Handle logout dialog close
+  const handleLogoutDialogClose = () => {
+    setShowLogoutDialog(false);
+  };
+
+  // Handle login again from logout dialog
+  const handleLoginAgain = () => {
+    setShowLogoutDialog(false);
+    setShowLoginDialog(true);
+  };
+
+  // Handle go home from logout dialog
+  const handleGoHome = () => {
+    setShowLogoutDialog(false);
+    router.push('/');
+  };
+
+  // Handle login dialog close
+  const handleLoginDialogClose = () => {
+    setShowLoginDialog(false);
+  };
+
+  // Handle login success
+  const handleLoginSuccess = () => {
+    setShowLoginDialog(false);
+    // Optionally reload cart after login
+    dispatch(loadCart());
   };
 
   // Calculate savings (placeholder - could be based on discounts)
@@ -138,7 +169,7 @@ export default function ShoppingCartPage() {
             <ShoppingBag className="w-24 h-24 text-gray-300 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h1>
             <p className="text-gray-600 mb-6">
-              Looks like you haven't added any items to your cart yet. 
+              Looks like you haven&apos;t added any items to your cart yet. 
               Start shopping to fill it up!
             </p>
           </div>
@@ -438,6 +469,25 @@ export default function ShoppingCartPage() {
           </div>
         </div>
       )}
+
+      {/* Logout Dialog */}
+      <LogoutDialog
+        isOpen={showLogoutDialog}
+        onClose={handleLogoutDialogClose}
+        onLoginAgain={handleLoginAgain}
+        onGoHome={handleGoHome}
+        title="Complete Checkout"
+        subtitle="Finalize your order and logout securely"
+      />
+
+      {/* Login Dialog */}
+      <LoginDialog
+        isOpen={showLoginDialog}
+        onClose={handleLoginDialogClose}
+        onLoginSuccess={handleLoginSuccess}
+        title="Welcome Back"
+        subtitle="Sign in to continue shopping"
+      />
     </div>
   );
 }

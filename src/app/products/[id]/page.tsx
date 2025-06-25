@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import Image from 'next/image';
-import Link from 'next/link';
 import { 
   fetchProductById, 
   clearCurrentProduct, 
@@ -18,7 +17,9 @@ import {
   selectCartError,
   clearCartError
 } from '@/lib/store/slices/cartSlice';
-import { Star, ShoppingCart, ArrowLeft, Heart, Share2, Plus, Minus, Check, Loader2 } from 'lucide-react';
+import { selectIsAuthenticated } from '@/lib/store/slices/userSlice';
+import { Star, ShoppingCart, ArrowLeft, Heart, Share2, Plus, Minus, Check, X, Loader2, User } from 'lucide-react';
+import LoginDialog from '../../../components/auth/LoginDialog';
 
 export default function ProductDetailsPage() {
   const params = useParams();
@@ -39,9 +40,27 @@ export default function ProductDetailsPage() {
   const cartLoading = useAppSelector(selectCartLoading);
   const cartError = useAppSelector(selectCartError);
 
+  // Get authentication state
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
   // Local state for UI interactions
   const [quantity, setQuantity] = useState(1);
   const [showAddedToCart, setShowAddedToCart] = useState(false);
+  
+  // Login dialog state
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [pendingAction, setPendingAction] = useState<'addToCartAndGo' | 'addToCartOnly' | 'viewCart' | null>(null);
+  
+  // State for pending action details (to preserve quantity and product at time of action)
+  const [pendingActionDetails, setPendingActionDetails] = useState<{
+    product: any;
+    quantity: number;
+    action: 'addToCartAndGo' | 'addToCartOnly' | 'viewCart';
+  } | null>(null);
+
+  // Enhanced login success modal state
+  const [showLoginSuccessModal, setShowLoginSuccessModal] = useState(false);
+  const [isExecutingCartAction, setIsExecutingCartAction] = useState(false);
 
   useEffect(() => {
     const productId = params.id;
@@ -73,6 +92,92 @@ export default function ProductDetailsPage() {
     }
   }, [dispatch, cartError]);
 
+  // Handle authentication requirement
+  const requireAuthentication = (action: 'addToCartAndGo' | 'addToCartOnly' | 'viewCart') => {
+    if (isAuthenticated) {
+      // User is authenticated, proceed with action immediately
+      executeAction(action, product, quantity);
+    } else {
+      // User is not authenticated, save action details and show login dialog
+      setPendingAction(action);
+      setPendingActionDetails({
+        product: product!,
+        quantity: quantity,
+        action: action
+      });
+      setShowLoginDialog(true);
+    }
+  };
+
+  // Execute action with specific product and quantity
+  const executeAction = async (
+    action: 'addToCartAndGo' | 'addToCartOnly' | 'viewCart', 
+    actionProduct: any, 
+    actionQuantity: number
+  ) => {
+    switch (action) {
+      case 'addToCartAndGo':
+        await handleAddToCart(actionProduct, actionQuantity, true);
+        break;
+      case 'addToCartOnly':
+        await handleAddToCart(actionProduct, actionQuantity, false);
+        break;
+      case 'viewCart':
+        router.push('/cart');
+        break;
+    }
+  };
+
+  // Enhanced login success handler - now shows modal instead of auto-executing
+  const handleLoginSuccess = async () => {
+    setShowLoginDialog(false);
+    
+    if (pendingActionDetails) {
+      // Show the success modal instead of auto-executing
+      setShowLoginSuccessModal(true);
+    }
+  };
+
+  // Handle the action from the success modal
+  const handleModalAction = async () => {
+    if (!pendingActionDetails) return;
+    
+    setIsExecutingCartAction(true);
+    
+    try {
+      // Execute the pending action with saved details
+      await executeAction(
+        pendingActionDetails.action, 
+        pendingActionDetails.product, 
+        pendingActionDetails.quantity
+      );
+      
+      // Close the modal
+      setShowLoginSuccessModal(false);
+      
+    } catch (error) {
+      console.error('Error executing cart action:', error);
+    } finally {
+      setIsExecutingCartAction(false);
+      setPendingAction(null);
+      setPendingActionDetails(null);
+    }
+  };
+
+  // Handle modal close
+  const handleModalClose = () => {
+    setShowLoginSuccessModal(false);
+    setPendingAction(null);
+    setPendingActionDetails(null);
+  };
+
+  // Handle login dialog close
+  const handleLoginDialogClose = () => {
+    setShowLoginDialog(false);
+    setPendingAction(null);
+    setPendingActionDetails(null);
+  };
+
   // Calculate total price based on quantity
   const calculateTotalPrice = () => {
     if (!product) return 0;
@@ -91,7 +196,7 @@ export default function ProductDetailsPage() {
   const handleQuantityChange = (change: number): void => {
     const newQuantity = quantity + change;
     
-    // Ensure quantity is at least 1 and at most 99 (reasonable limit)
+    // Ensure quantity is at least 1 and at most 100 (reasonable limit)
     if (newQuantity >= 1 && newQuantity <= 100) {
       setQuantity(newQuantity);
     }
@@ -105,68 +210,43 @@ export default function ProductDetailsPage() {
     }
   };
 
-  // Enhanced add to cart handler with Redux and navigation
-  const handleAddToCart = async () => {
-    if (!product) return;
+  // Enhanced add to cart handler with optional navigation
+  const handleAddToCart = async (actionProduct?: any, actionQuantity?: number, shouldNavigate: boolean = false) => {
+    const productToAdd = actionProduct || product;
+    const quantityToAdd = actionQuantity || quantity;
+    
+    if (!productToAdd || !isAuthenticated) return;
     
     try {
       // Optimistic update for better UX
-      dispatch(optimisticAddToCart({ product, quantity }));
+      dispatch(optimisticAddToCart({ product: productToAdd, quantity: quantityToAdd }));
       
       // Dispatch the async action
       const result = await dispatch(addToCart({ 
-        product, 
-        quantity,
+        product: productToAdd, 
+        quantity: quantityToAdd,
         // TODO: Add userId when authentication is implemented
         // userId: currentUser?.id 
       }));
       
       if (addToCart.fulfilled.match(result)) {
-        // Show success feedback
-        setShowAddedToCart(true);
-        setTimeout(() => setShowAddedToCart(false), 3000);
+        // Show success feedback only if not coming from modal
+        if (!showLoginSuccessModal) {
+          setShowAddedToCart(true);
+          setTimeout(() => setShowAddedToCart(false), 3000);
+        }
         
-        // Reset quantity to 1 after successful add
-        setQuantity(1);
+        // Reset quantity to 1 after successful add (only if using current state)
+        if (!actionQuantity) {
+          setQuantity(1);
+        }
         
-        console.log(`Successfully added ${quantity} x ${product.title} to cart`);
+        console.log(`Successfully added ${quantityToAdd} x ${productToAdd.title} to cart`);
         
-        // Navigate to cart page after successful addition
-        router.push('/cart');
-      } else {
-        // Handle error case
-        console.error('Failed to add to cart:', result.payload);
-      }
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-    }
-  };
-
-  // Alternative method: Add to cart without navigation
-  const handleAddToCartOnly = async () => {
-    if (!product) return;
-    
-    try {
-      // Optimistic update for better UX
-      dispatch(optimisticAddToCart({ product, quantity }));
-      
-      // Dispatch the async action
-      const result = await dispatch(addToCart({ 
-        product, 
-        quantity,
-        // TODO: Add userId when authentication is implemented
-        // userId: currentUser?.id 
-      }));
-      
-      if (addToCart.fulfilled.match(result)) {
-        // Show success feedback
-        setShowAddedToCart(true);
-        setTimeout(() => setShowAddedToCart(false), 3000);
-        
-        // Reset quantity to 1 after successful add
-        setQuantity(1);
-        
-        console.log(`Successfully added ${quantity} x ${product.title} to cart`);
+        // Navigate to cart page if requested
+        if (shouldNavigate) {
+          router.push('/cart');
+        }
       } else {
         // Handle error case
         console.error('Failed to add to cart:', result.payload);
@@ -201,6 +281,22 @@ export default function ProductDetailsPage() {
       }
     } catch (error) {
       console.error('Error sharing product:', error);
+    }
+  };
+
+  // Get action text for modal
+  const getActionText = () => {
+    if (!pendingActionDetails) return '';
+    
+    switch (pendingActionDetails.action) {
+      case 'addToCartAndGo':
+        return 'Add to Cart & Go to Checkout';
+      case 'addToCartOnly':
+        return 'Add to Cart Only';
+      case 'viewCart':
+        return 'View Cart';
+      default:
+        return 'Continue';
     }
   };
 
@@ -270,11 +366,11 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Success notification */}
+      {/* Success notification - For regular cart additions */}
       {showAddedToCart && (
         <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-right duration-300">
           <Check className="w-5 h-5" />
-          Added to cart successfully!
+          <span>Added to cart successfully!</span>
         </div>
       )}
 
@@ -290,6 +386,125 @@ export default function ProductDetailsPage() {
           </button>
         </div>
       )}
+
+      {/* Enhanced Login Success Modal */}
+      {showLoginSuccessModal && pendingActionDetails && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold">Welcome Back!</h2>
+                    <p className="text-green-100 text-sm">Successfully signed in</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleModalClose}
+                  className="text-white hover:text-green-100 transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-8 h-8 text-green-600" />
+                </div>
+                <p className="text-gray-600 mb-4">
+                  You're now signed in! Ready to add this item to your cart?
+                </p>
+              </div>
+
+              {/* Product Preview */}
+              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                    <Image
+                      src={pendingActionDetails.product.image}
+                      alt={pendingActionDetails.product.title}
+                      width={64}
+                      height={64}
+                      className="object-contain w-full h-full p-1"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-gray-900 truncate">
+                      {pendingActionDetails.product.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Quantity: {pendingActionDetails.quantity}
+                    </p>
+                    <p className="text-lg font-bold text-orange-600">
+                      {formatPrice(pendingActionDetails.product.price * pendingActionDetails.quantity)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleModalClose}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                >
+                  Maybe Later
+                </button>
+                <button
+                  onClick={handleModalAction}
+                  disabled={isExecutingCartAction}
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                >
+                  {isExecutingCartAction ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-5 h-5" />
+                      {getActionText()}
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {pendingActionDetails.action === 'addToCartAndGo' && (
+                <p className="text-xs text-gray-500 text-center mt-3">
+                  This will add the item to your cart and redirect you to checkout
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login Dialog */}
+      <LoginDialog
+        isOpen={showLoginDialog}
+        onClose={handleLoginDialogClose}
+        onLoginSuccess={handleLoginSuccess}
+        product={product}
+        title="Login Required"
+        subtitle={
+          pendingActionDetails 
+            ? `Sign in to ${
+                pendingActionDetails.action === 'addToCartAndGo' 
+                  ? 'add to cart and proceed to checkout'
+                  : pendingActionDetails.action === 'addToCartOnly'
+                  ? 'add this item to your cart'
+                  : 'view your cart'
+              }`
+            : "Sign in to add items to your cart"
+        }
+      />
 
       {/* Back Button */}
       <button
@@ -346,10 +561,17 @@ export default function ProductDetailsPage() {
             </span>
 
             {/* Cart status indicator */}
-            {cartItemQuantity > 0 && (
+            {cartItemQuantity > 0 && isAuthenticated && (
               <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 text-sm px-3 py-1 rounded-full mb-4">
                 <ShoppingCart className="w-4 h-4" />
                 {cartItemQuantity} in cart
+              </div>
+            )}
+
+            {/* Authentication status indicator */}
+            {!isAuthenticated && (
+              <div className="inline-flex items-center gap-2 bg-orange-50 text-orange-700 text-sm px-3 py-1 rounded-full mb-4">
+                <span>Sign in required for cart actions</span>
               </div>
             )}
           </div>
@@ -441,14 +663,14 @@ export default function ProductDetailsPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-              {/* Option 1: Add to cart and navigate */}
+              {/* Add to cart and navigate - requires authentication */}
               <button
-                onClick={handleAddToCart}
+                onClick={() => requireAuthentication('addToCartAndGo')}
                 disabled={cartLoading}
                 className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
                 aria-label={`Add ${quantity} ${product.title} to cart for ${formatPrice(calculateTotalPrice())} and go to cart`}
               >
-                {cartLoading ? (
+                {cartLoading && isAuthenticated ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
                     Adding...
@@ -481,7 +703,7 @@ export default function ProductDetailsPage() {
             {/* Alternative: Separate buttons for different actions */}
             <div className="flex gap-2 mt-2">
               <button
-                onClick={handleAddToCartOnly}
+                onClick={() => requireAuthentication('addToCartOnly')}
                 disabled={cartLoading}
                 className="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 aria-label={`Add ${quantity} ${product.title} to cart only`}
@@ -490,16 +712,15 @@ export default function ProductDetailsPage() {
                 Add to Cart Only
               </button>
               
-              <Link 
-                href="/cart"
+              <button
+                onClick={() => requireAuthentication('viewCart')}
                 className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
               >
                 <ShoppingCart className="w-4 h-4" />
                 View Cart
-              </Link>
+              </button>
             </div>
           </div>
-
           {/* Additional Info */}
           <div className="border-t pt-6 space-y-3">
             <div className="flex justify-between text-sm">
