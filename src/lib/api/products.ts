@@ -68,11 +68,14 @@ interface CacheEntry<T> {
   timestamp: number;
 }
 
-// Type-safe cache implementation
+// Enhanced Type-safe cache implementation
 class TypedCache {
   private productsCache = new Map<string, CacheEntry<Product[]>>();
   private categoriesCache = new Map<string, CacheEntry<string[]>>();
+  // FIXED: Added single product cache
+  private singleProductCache = new Map<number, CacheEntry<Product>>();
 
+  // Products array cache methods
   setProducts(key: string, data: Product[]): void {
     this.productsCache.set(key, { data, timestamp: Date.now() });
   }
@@ -85,6 +88,7 @@ class TypedCache {
     return null;
   }
 
+  // Categories cache methods
   setCategories(key: string, data: string[]): void {
     this.categoriesCache.set(key, { data, timestamp: Date.now() });
   }
@@ -97,15 +101,44 @@ class TypedCache {
     return null;
   }
 
+  // FIXED: Single product cache methods (needed for getById)
+  setSingleProduct(id: number, data: Product): void {
+    this.singleProductCache.set(id, { data, timestamp: Date.now() });
+  }
+
+  getSingleProduct(id: number): Product | null {
+    const cached = this.singleProductCache.get(id);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+      return cached.data;
+    }
+    return null;
+  }
+
+  // Clear methods
   clear(): void {
     this.productsCache.clear();
+    this.categoriesCache.clear();
+    this.singleProductCache.clear();
+  }
+
+  clearProducts(): void {
+    this.productsCache.clear();
+  }
+
+  clearSingleProducts(): void {
+    this.singleProductCache.clear();
+  }
+
+  clearCategories(): void {
     this.categoriesCache.clear();
   }
 }
 
 const cache = new TypedCache();
 
+// FIXED: Complete cached API with ALL methods
 export const cachedProductsApi = {
+  // Get all products with caching
   getAll: async (params?: FetchProductsParams): Promise<Product[]> => {
     const cacheKey = `products_${JSON.stringify(params || {})}`;
     const cached = cache.getProducts(cacheKey);
@@ -119,6 +152,20 @@ export const cachedProductsApi = {
     return data;
   },
 
+  // FIXED: Added missing getById with caching
+  getById: async (id: number): Promise<Product> => {
+    const cached = cache.getSingleProduct(id);
+    
+    if (cached) {
+      return cached;
+    }
+    
+    const data = await productsApi.getById(id);
+    cache.setSingleProduct(id, data);
+    return data;
+  },
+
+  // Get categories with caching
   getCategories: async (): Promise<string[]> => {
     const cacheKey = 'categories';
     const cached = cache.getCategories(cacheKey);
@@ -132,8 +179,37 @@ export const cachedProductsApi = {
     return data;
   },
 
-  // Clear cache when needed
+  // FIXED: Added missing getByCategory with caching
+  getByCategory: async (category: string, params?: Omit<FetchProductsParams, 'category'>): Promise<Product[]> => {
+    const cacheKey = `category_${category}_${JSON.stringify(params || {})}`;
+    const cached = cache.getProducts(cacheKey);
+    
+    if (cached) {
+      return cached;
+    }
+    
+    const data = await productsApi.getByCategory(category, params);
+    cache.setProducts(cacheKey, data);
+    return data;
+  },
+
+  // Cache management utilities
   clearCache: () => {
     cache.clear();
   },
+
+  clearProductsCache: () => {
+    cache.clearProducts();
+  },
+
+  clearSingleProductsCache: () => {
+    cache.clearSingleProducts();
+  },
+
+  clearCategoriesCache: () => {
+    cache.clearCategories();
+  },
 };
+
+// Export cache instance for advanced usage
+export { cache };

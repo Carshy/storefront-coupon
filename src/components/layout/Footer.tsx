@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-bold text-blue-400 mb-4">ModernStore</h3>
+            <h3 className="text-xl font-bold text-orange-500 mb-4">ModernStore</h3>
             <p className="text-gray-300 mb-4">
               Your trusted online shopping destination for quality products at great prices.
             </p>
@@ -84,16 +84,16 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
             <div className="space-y-3">
               <div className="flex items-center">
-                <MapPin className="w-4 h-4 mr-2 text-blue-400" />
+                <MapPin className="w-4 h-4 mr-2 text-orange-500" />
                 <span className="text-gray-300 text-sm">123 Commerce St, City, State 12345</span>
               </div>
               <div className="flex items-center">
-                <Phone className="w-4 h-4 mr-2 text-blue-400" />
+                <Phone className="w-4 h-4 mr-2 text-orange-500" />
                 <span className="text-gray-300 text-sm">+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center">
-                <Mail className="w-4 h-4 mr-2 text-blue-400" />
-                <span className="text-gray-300 text-sm">support@modernstore.com</span>
+                <Mail className="w-4 h-4 mr-2 text-orange-500" />
+                <span className="text-gray-300 text-sm">support@luxeline.com</span>
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2024 ModernStore. All rights reserved. Built with security and performance in mind.
+            © 2025 LuxeLine. All rights reserved. Built with security and performance in mind.
           </p>
         </div>
       </div>

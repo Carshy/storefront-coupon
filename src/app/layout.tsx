@@ -1,8 +1,10 @@
 // src/app/layout.tsx
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/lib/store/providers';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -13,10 +15,10 @@ export const metadata: Metadata = {
   authors: [{ name: 'Your Name' }],
 };
 
-export const viewport: Viewport = {
+export const viewport = {
   width: 'device-width',
   initialScale: 1,
-};
+}
 
 export default function RootLayout({
   children,
@@ -25,11 +27,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body 
+        className={`${inter.className} antialiased`}
+        suppressHydrationWarning={true}
+      >
         <Providers>
+          <Header />
           <div className="min-h-screen bg-gray-50">
             {children}
           </div>
+          <Footer />
         </Providers>
       </body>
     </html>
