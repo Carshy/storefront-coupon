@@ -77,7 +77,7 @@ export default function Header() {
             </button>
 
             {/* User Account */}
-            <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
+            <button className="p-2 text-gray-700 hover:text-orange-600 transition-colors">
               <User className="w-5 h-5" />
             </button>
 

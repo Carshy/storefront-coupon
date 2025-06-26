@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { fetchProducts, fetchCategories } from '../lib/store/slices/productSlice';
 import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
@@ -85,7 +86,7 @@ export default function HomePage() {
               🔥 Trending Products
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover what's popular right now. These highly-rated products are flying off our shelves!
+              Discover what&apos;s popular right now. These highly-rated products are flying off our shelves!
             </p>
           </div>
           
@@ -93,7 +94,7 @@ export default function HomePage() {
           
           {!loading && trendingProducts.length > 0 && (
             <div className="text-center mt-12">
-              <a
+              <Link
                 href="/products"
                 className="inline-flex items-center bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-semibold transition-colors duration-200"
               >
@@ -101,7 +102,7 @@ export default function HomePage() {
                 <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
+              </Link>
             </div>
           )}
         </div>

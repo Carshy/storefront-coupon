@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-bold text-orange-500 mb-4">ModernStore</h3>
+            <h3 className="text-xl font-bold text-orange-500 mb-4">LuxeLine</h3>
             <p className="text-gray-300 mb-4">
               Your trusted online shopping destination for quality products at great prices.
             </p>
@@ -72,9 +72,9 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/returns" className="text-gray-300 hover:text-white transition-colors">
+                <p className="text-gray-300 hover:text-white transition-colors">
                   Returns
-                </Link>
+                </p>
               </li>
             </ul>
           </div>
@@ -85,11 +85,11 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center">
                 <MapPin className="w-4 h-4 mr-2 text-orange-500" />
-                <span className="text-gray-300 text-sm">123 Commerce St, City, State 12345</span>
+                <span className="text-gray-300 text-sm">123 Brookside Avenue, Westlands, Nairobi 10001</span>
               </div>
               <div className="flex items-center">
                 <Phone className="w-4 h-4 mr-2 text-orange-500" />
-                <span className="text-gray-300 text-sm">+1 (555) 123-4567</span>
+                <span className="text-gray-300 text-sm">+254 (17) 684-174</span>
               </div>
               <div className="flex items-center">
                 <Mail className="w-4 h-4 mr-2 text-orange-500" />
