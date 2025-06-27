@@ -6,19 +6,16 @@ export default function ContactUs() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-extrabold text-gray-700 mb-4">
             Get in <span className="text-orange-500">Touch</span>
           </h1>
           <p className="text-lg text-gray-600">
-            We’d love to hear from you. Reach out and we’ll respond as soon as possible.
+            We&apos;d love to hear from you. Reach out and we&apos;ll respond as soon as possible.
           </p>
         </div>
 
-        {/* Contact Form & Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
           <form className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -65,7 +62,6 @@ export default function ContactUs() {
             </button>
           </form>
 
-          {/* Contact Info */}
           <div className="space-y-10 text-gray-700">
             <div className="flex items-start gap-4">
               <Mail className="w-6 h-6 text-orange-500 mt-1" />

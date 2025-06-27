@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       
       <div className="p-4">
         <Link href={`/products/${product.id}`}>
-          <h3 className="font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+          <h3 className="font-semibold text-gray-900 mb-2 hover:text-orange-600 transition-colors">
             {truncateTitle(product.title)}
           </h3>
         </Link>
@@ -49,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 key={index}
                 className={`w-4 h-4 ${
                   index < Math.floor(product.rating.rate)
-                    ? 'text-yellow-400 fill-current'
+                    ? 'text-orange-500 fill-current'
                     : 'text-gray-300'
                 }`}
               />
@@ -66,7 +66,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
           
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition-colors duration-200 flex items-center justify-center"
+            className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-colors duration-200 flex items-center justify-center"
             aria-label={`Add ${product.title} to cart`}
           >
             <ShoppingCart className="w-4 h-4" />

@@ -43,7 +43,6 @@ export default function AboutLuxeline() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
 
-      {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center bg-gray-200 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-72 h-72 bg-orange-500 rounded-full blur-3xl animate-pulse"></div>
@@ -99,7 +98,6 @@ export default function AboutLuxeline() {
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="py-20 bg-gray-700 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_25%_25%,white_1px,transparent_1px),radial-gradient(circle_at_75%_75%,white_1px,transparent_1px)] bg-[length:50px_50px] animate-float"></div>
 

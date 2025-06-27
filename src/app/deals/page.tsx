@@ -5,7 +5,6 @@ import HotProducts from '../../components/home/HotProducts';
 export default function DealsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Page Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold text-gray-900 text-center">
@@ -17,10 +16,8 @@ export default function DealsPage() {
         </div>
       </div>
 
-      {/* Spotlight Component */}
       <HotProducts />
       
-      {/* Optional: Additional category content */}
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <p className="text-gray-600">

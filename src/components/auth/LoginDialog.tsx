@@ -44,7 +44,6 @@ export default function LoginDialog({
     return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
   };
 
-  // Handle login form submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -56,7 +55,6 @@ export default function LoginDialog({
       const result = await dispatch(loginUser(loginCredentials));
       
       if (loginUser.fulfilled.match(result)) {
-        // Login successful
         setLoginCredentials({ username: '', password: '' });
         onLoginSuccess();
       }
@@ -65,14 +63,12 @@ export default function LoginDialog({
     }
   };
 
-  // Handle dialog close
   const handleCloseDialog = () => {
     setLoginCredentials({ username: '', password: '' });
     dispatch(clearError());
     onClose();
   };
 
-  // Handle input changes
   const handleInputChange = (field: 'username' | 'password', value: string) => {
     setLoginCredentials(prev => ({
       ...prev,
@@ -85,11 +81,10 @@ export default function LoginDialog({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* Dialog Header */}
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-full">
-              <Lock className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-orange-100 rounded-full">
+              <Lock className="w-5 h-5 text-orange-600" />
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">
@@ -109,7 +104,6 @@ export default function LoginDialog({
           </button>
         </div>
 
-        {/* Product Preview - Only show if product is provided */}
         {product && (
           <div className="px-6 py-4 bg-gray-50 border-b">
             <div className="flex items-center gap-3">
@@ -125,7 +119,7 @@ export default function LoginDialog({
                 <h3 className="font-medium text-gray-900 text-sm">
                   {truncateTitle(product.title, 40)}
                 </h3>
-                <p className="text-lg font-bold text-blue-600">
+                <p className="text-lg font-bold text-orange-600">
                   {formatPrice(product.price)}
                 </p>
               </div>
@@ -133,9 +127,7 @@ export default function LoginDialog({
           </div>
         )}
 
-        {/* Login Form */}
         <form onSubmit={handleLogin} className="p-6 space-y-4">
-          {/* Error Message */}
           {authError && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
               <div className="flex items-center gap-2">
@@ -145,7 +137,6 @@ export default function LoginDialog({
             </div>
           )}
 
-          {/* Username Field */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
               Username
@@ -157,7 +148,7 @@ export default function LoginDialog({
                 id="username"
                 value={loginCredentials.username}
                 onChange={(e) => handleInputChange('username', e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
                 placeholder="Enter your username"
                 required
                 disabled={authLoading}
@@ -165,7 +156,6 @@ export default function LoginDialog({
             </div>
           </div>
 
-          {/* Password Field */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
               Password
@@ -177,7 +167,7 @@ export default function LoginDialog({
                 id="password"
                 value={loginCredentials.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
                 placeholder="Enter your password"
                 required
                 disabled={authLoading}
@@ -185,16 +175,14 @@ export default function LoginDialog({
             </div>
           </div>
 
-          {/* Demo Credentials Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <div className="text-sm text-blue-700">
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+            <div className="text-sm text-orange-700">
               <p className="font-medium mb-1">Demo Credentials:</p>
               <p>Username: <code className="bg-white px-1 rounded">mor_2314</code></p>
               <p>Password: <code className="bg-white px-1 rounded">83r5^_</code></p>
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex gap-3 pt-2">
             <button
               type="button"
@@ -207,7 +195,7 @@ export default function LoginDialog({
             <button
               type="submit"
               disabled={authLoading || !loginCredentials.username || !loginCredentials.password}
-              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-orange-300 text-white rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
             >
               {authLoading ? (
                 <>
@@ -224,7 +212,6 @@ export default function LoginDialog({
           </div>
         </form>
 
-        {/* Footer */}
         <div className="px-6 py-4 bg-gray-50 border-t text-center">
           <p className="text-xs text-gray-500">
             Sign in to access your cart and complete your purchase
