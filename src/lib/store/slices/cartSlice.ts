@@ -1,9 +1,7 @@
-// src/lib/store/slices/cartSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { CartItem, CartState, Product, ApiError } from '../../types';
 import { cartOperations, localCartManager } from '../../api/cart';
 
-// Enhanced cart state with additional UI states
 interface EnhancedCartState extends CartState {
   loading: boolean;
   error: string | null;
@@ -118,7 +116,6 @@ const cartSlice = createSlice({
       state.syncStatus = action.payload;
     },
 
-    // Direct cart manipulation (use with caution - prefer async thunks)
     setCartItems: (state, action: PayloadAction<CartItem[]>) => {
       state.items = action.payload;
       const totals = calculateTotals(action.payload);
@@ -127,7 +124,6 @@ const cartSlice = createSlice({
       state.lastUpdated = new Date().toISOString();
     },
 
-    // Optimistic updates (for better UX before server sync)
     optimisticAddToCart: (state, action: PayloadAction<{ product: Product; quantity: number }>) => {
       const { product, quantity } = action.payload;
       const existingItemIndex = state.items.findIndex(item => item.product.id === product.id);

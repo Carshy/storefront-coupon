@@ -1,4 +1,3 @@
-// src/lib/store/slices/productsSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { EnhancedProductsState, ApiError } from '../../types';
 import { cachedProductsApi } from '../../api/products';
@@ -17,7 +16,6 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-// Async thunk for fetching single product - NEW for EnhancedProductsState
 export const fetchProductById = createAsyncThunk(
   'products/fetchProductById',
   async (id: number, { rejectWithValue }) => {
@@ -44,7 +42,6 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
-// FIXED: Use the proper API method for fetching by category
 export const fetchProductsByCategory = createAsyncThunk(
   'products/fetchProductsByCategory',
   async (category: string, { rejectWithValue }) => {
@@ -58,27 +55,21 @@ export const fetchProductsByCategory = createAsyncThunk(
   }
 );
 
-// FIXED: Use EnhancedProductsState as the main state type
 const initialState: EnhancedProductsState = {
-  // Original ProductsState properties
   products: [],
   categories: [],
   loading: false,
   error: null,
   currentCategory: null,
-  
-  // NEW: Enhanced properties for single product
   currentProduct: null,
   currentProductLoading: false,
   currentProductError: null,
 };
 
-// Products slice
 const productsSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    // Existing reducers
     setCurrentCategory: (state, action: PayloadAction<string | null>) => {
       state.currentCategory = action.payload;
     },
@@ -89,7 +80,6 @@ const productsSlice = createSlice({
       state.products = [];
     },
     
-    // NEW: Reducers for single product management
     clearCurrentProduct: (state) => {
       state.currentProduct = null;
       state.currentProductError = null;
@@ -98,14 +88,12 @@ const productsSlice = createSlice({
       state.currentProductError = null;
     },
     
-    // Utility reducer to clear all errors
     clearAllErrors: (state) => {
       state.error = null;
       state.currentProductError = null;
     },
   },
   extraReducers: (builder) => {
-    // Fetch products (for lists/collections)
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
@@ -121,7 +109,6 @@ const productsSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // NEW: Fetch single product (for product detail pages)
     builder
       .addCase(fetchProductById.pending, (state) => {
         state.currentProductLoading = true;
@@ -137,7 +124,6 @@ const productsSlice = createSlice({
         state.currentProductError = action.payload as string;
       });
 
-    // Fetch categories
     builder
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
@@ -177,5 +163,4 @@ export const {
   clearAllErrors
 } = productsSlice.actions;
 
-// Export reducer
 export default productsSlice.reducer;

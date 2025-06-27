@@ -1,8 +1,6 @@
-// src/lib/api/cart.ts
 import axiosInstance from './axiosInstance';
 import { CartItem, Product, ApiError } from '../types';
 
-// Cart API response types
 interface CartApiItem {
   productId: number;
   quantity: number;
@@ -25,20 +23,16 @@ interface UpdateCartRequest extends CreateCartRequest {
   id: number;
 }
 
-// Local storage cart item (for offline functionality)
 interface LocalCartItem {
   product: Product;
   quantity: number;
   addedAt: string;
 }
 
-// Cart API functions
 export const cartApi = {
-  // Get user's cart (from API)
   getUserCart: async (userId: number): Promise<CartApiResponse | null> => {
     try {
       const response = await axiosInstance.get<CartApiResponse[]>(`/carts/user/${userId}`);
-      // Return the most recent cart or null if no carts
       return response.data.length > 0 ? response.data[0] : null;
     } catch (error) {
       console.error(`Error fetching cart for user ${userId}:`, error);
@@ -46,7 +40,6 @@ export const cartApi = {
     }
   },
 
-  // Create new cart
   createCart: async (cartData: CreateCartRequest): Promise<CartApiResponse> => {
     try {
       const response = await axiosInstance.post<CartApiResponse>('/carts', cartData);
@@ -57,7 +50,6 @@ export const cartApi = {
     }
   },
 
-  // Update existing cart
   updateCart: async (cartData: UpdateCartRequest): Promise<CartApiResponse> => {
     try {
       const response = await axiosInstance.put<CartApiResponse>(`/carts/${cartData.id}`, cartData);
@@ -68,7 +60,6 @@ export const cartApi = {
     }
   },
 
-  // Delete cart
   deleteCart: async (cartId: number): Promise<void> => {
     try {
       await axiosInstance.delete(`/carts/${cartId}`);
@@ -78,7 +69,6 @@ export const cartApi = {
     }
   },
 
-  // Get all carts (admin functionality)
   getAllCarts: async (): Promise<CartApiResponse[]> => {
     try {
       const response = await axiosInstance.get<CartApiResponse[]>('/carts');
@@ -90,12 +80,10 @@ export const cartApi = {
   },
 };
 
-// Local storage cart management (for better UX)
 const CART_STORAGE_KEY = 'shopping_cart';
 const CART_EXPIRY_DAYS = 30;
 
 class LocalCartManager {
-  // Get cart from localStorage
   getLocalCart(): LocalCartItem[] {
     try {
       if (typeof window === 'undefined') return [];
@@ -105,7 +93,6 @@ class LocalCartManager {
 
       const parsed = JSON.parse(stored);
       
-      // Check if cart has expired
       if (parsed.expiry && Date.now() > parsed.expiry) {
         this.clearLocalCart();
         return [];
@@ -141,11 +128,9 @@ class LocalCartManager {
     const existingIndex = items.findIndex(item => item.product.id === product.id);
 
     if (existingIndex >= 0) {
-      // Update existing item
       items[existingIndex].quantity += quantity;
       items[existingIndex].addedAt = new Date().toISOString();
     } else {
-      // Add new item
       items.push({
         product,
         quantity,
@@ -157,21 +142,18 @@ class LocalCartManager {
     return items;
   }
 
-  // Remove item from local cart
   removeFromLocalCart(productId: number): LocalCartItem[] {
     const items = this.getLocalCart().filter(item => item.product.id !== productId);
     this.saveLocalCart(items);
     return items;
   }
 
-  // Update item quantity in local cart
   updateLocalCartQuantity(productId: number, quantity: number): LocalCartItem[] {
     const items = this.getLocalCart();
     const itemIndex = items.findIndex(item => item.product.id === productId);
 
     if (itemIndex >= 0) {
       if (quantity <= 0) {
-        // Remove item if quantity is 0 or less
         items.splice(itemIndex, 1);
       } else {
         items[itemIndex].quantity = quantity;
@@ -183,7 +165,6 @@ class LocalCartManager {
     return items;
   }
 
-  // Clear local cart
   clearLocalCart(): void {
     try {
       if (typeof window === 'undefined') return;
@@ -193,7 +174,6 @@ class LocalCartManager {
     }
   }
 
-  // Convert local cart items to CartItem format
   convertToCartItems(localItems: LocalCartItem[]): CartItem[] {
     return localItems.map(item => ({
       product: item.product,
@@ -201,7 +181,6 @@ class LocalCartManager {
     }));
   }
 
-  // Get cart summary
   getCartSummary(): {
     itemCount: number;
     totalPrice: number;
@@ -218,19 +197,16 @@ class LocalCartManager {
     };
   }
 
-  // Sync local cart with server (for authenticated users)
   async syncWithServer(userId: number): Promise<void> {
     try {
       const localItems = this.getLocalCart();
       if (localItems.length === 0) return;
 
-      // Convert local items to API format
       const apiProducts: CartApiItem[] = localItems.map(item => ({
         productId: item.product.id,
         quantity: item.quantity,
       }));
 
-      // Try to get existing cart
       const existingCart = await cartApi.getUserCart(userId);
 
       const cartData = {
@@ -240,35 +216,27 @@ class LocalCartManager {
       };
 
       if (existingCart) {
-        // Update existing cart
         await cartApi.updateCart({
           ...cartData,
           id: existingCart.id,
         });
       } else {
-        // Create new cart
         await cartApi.createCart(cartData);
       }
 
       console.log('Cart synced with server successfully');
     } catch (error) {
       console.error('Error syncing cart with server:', error);
-      // Don't throw error - local cart should still work
     }
   }
 }
 
-// Export singleton instance
 export const localCartManager = new LocalCartManager();
 
-// Combined cart operations (local + server)
 export const cartOperations = {
-  // Add product to cart
   addProduct: async (product: Product, quantity: number, userId?: number): Promise<CartItem[]> => {
-    // Always update local cart first for immediate feedback
     const localItems = localCartManager.addToLocalCart(product, quantity);
     
-    // Sync with server if user is authenticated
     if (userId) {
       try {
         await localCartManager.syncWithServer(userId);
@@ -280,7 +248,6 @@ export const cartOperations = {
     return localCartManager.convertToCartItems(localItems);
   },
 
-  // Remove product from cart
   removeProduct: async (productId: number, userId?: number): Promise<CartItem[]> => {
     const localItems = localCartManager.removeFromLocalCart(productId);
     
@@ -295,7 +262,6 @@ export const cartOperations = {
     return localCartManager.convertToCartItems(localItems);
   },
 
-  // Update product quantity
   updateQuantity: async (productId: number, quantity: number, userId?: number): Promise<CartItem[]> => {
     const localItems = localCartManager.updateLocalCartQuantity(productId, quantity);
     

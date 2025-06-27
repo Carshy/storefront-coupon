@@ -1,4 +1,3 @@
-// product related types
 export interface Product {
   id: number,
   title: string,
@@ -20,14 +19,12 @@ export interface ProductsState {
   currentCategory: string | null;
 }
 
-// Enhanced state to include single product
 export interface EnhancedProductsState extends ProductsState {
   currentProduct: Product | null;
   currentProductLoading: boolean;
   currentProductError: string | null;
 }
 
-// Cart related types
 export interface CartItem {
   product: Product;
   quantity: number;
@@ -39,7 +36,6 @@ export interface CartState {
   itemCount: number;
 }
 
-// API related types
 export interface ApiResponse<T> {
   data: T;
   status: number;
@@ -52,7 +48,6 @@ export interface ApiError {
   code?: string;
 }
 
-// Auth related types (for future use)
 export interface User {
   id: number;
   email: string;
@@ -82,10 +77,8 @@ export interface AuthState {
   error: string | null;
 }
 
-// Utility types
 export type ProductCategory = 'electronics' | 'jewelery' | "men's clothing" | "women's clothing";
 
-// API endpoint types
 export interface FetchProductsParams {
   limit?: number;
   sort?: 'asc' | 'desc';

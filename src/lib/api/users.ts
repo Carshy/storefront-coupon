@@ -1,8 +1,6 @@
-// src/lib/api/users.ts
 import axiosInstance from './axiosInstance';
 import { User, ApiResponse } from '../types';
 
-// Login credentials interface
 export interface LoginCredentials {
   username: string;
   password: string;
