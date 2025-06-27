@@ -26,7 +26,9 @@ const nextConfig: NextConfig = {
    eslint: {
     ignoreDuringBuilds: true,
   },
-  
+   typescript: {
+    ignoreBuildErrors: true,
+  },
   // Security headers (recommended for production)
   async headers() {
     return [

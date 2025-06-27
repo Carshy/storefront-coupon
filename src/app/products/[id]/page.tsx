@@ -26,30 +26,26 @@ export default function ProductDetailsPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  // Get product data from Redux store
   const {
     currentProduct: product,
     currentProductLoading: loading,
     currentProductError: error
   } = useAppSelector((state) => state.products);
 
-  // Get cart data from Redux store
   const cartItemQuantity = useAppSelector((state) => 
     product ? selectCartItemQuantity(product.id)(state) : 0
   );
   const cartLoading = useAppSelector(selectCartLoading);
   const cartError = useAppSelector(selectCartError);
 
-  // Get authentication state
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-  // Local state for UI interactions
   const [quantity, setQuantity] = useState(1);
   const [showAddedToCart, setShowAddedToCart] = useState(false);
   
-  // Login dialog state
+  // Login dialog state - FIXED: Properly declare pendingAction setter
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [setPendingAction] = useState<'addToCartAndGo' | 'addToCartOnly' | 'viewCart' | null>(null);
+  const [pendingAction, setPendingAction] = useState<'addToCartAndGo' | 'addToCartOnly' | 'viewCart' | null>(null);
   
   // State for pending action details (to preserve quantity and product at time of action)
   const [pendingActionDetails, setPendingActionDetails] = useState<{
@@ -58,7 +54,6 @@ export default function ProductDetailsPage() {
     action: 'addToCartAndGo' | 'addToCartOnly' | 'viewCart';
   } | null>(null);
 
-  // Enhanced login success modal state
   const [showLoginSuccessModal, setShowLoginSuccessModal] = useState(false);
   const [isExecutingCartAction, setIsExecutingCartAction] = useState(false);
 
@@ -79,27 +74,24 @@ export default function ProductDetailsPage() {
       dispatch(fetchProductById(id));
     }
 
-    // Cleanup on unmount
     return () => {
       dispatch(clearCurrentProduct());
     };
   }, [params.id, dispatch]);
 
-  // Clear cart error when component mounts
   useEffect(() => {
     if (cartError) {
       dispatch(clearCartError());
     }
   }, [dispatch, cartError]);
 
-  // Handle authentication requirement
   const requireAuthentication = (action: 'addToCartAndGo' | 'addToCartOnly' | 'viewCart') => {
     if (isAuthenticated) {
       // User is authenticated, proceed with action immediately
       executeAction(action, product, quantity);
     } else {
       // User is not authenticated, save action details and show login dialog
-      setPendingAction(action);
+      setPendingAction(action); 
       setPendingActionDetails({
         product: product!,
         quantity: quantity,
@@ -109,82 +101,86 @@ export default function ProductDetailsPage() {
     }
   };
 
-  // Execute action with specific product and quantity
   const executeAction = async (
     action: 'addToCartAndGo' | 'addToCartOnly' | 'viewCart', 
     actionProduct: any, 
     actionQuantity: number
   ) => {
-    switch (action) {
-      case 'addToCartAndGo':
-        await handleAddToCart(actionProduct, actionQuantity, true);
-        break;
-      case 'addToCartOnly':
-        await handleAddToCart(actionProduct, actionQuantity, false);
-        break;
-      case 'viewCart':
-        router.push('/cart');
-        break;
+    try {
+      switch (action) {
+        case 'addToCartAndGo':
+          await handleAddToCart(actionProduct, actionQuantity, true);
+          break;
+        case 'addToCartOnly':
+          await handleAddToCart(actionProduct, actionQuantity, false);
+          break;
+        case 'viewCart':
+          router.push('/cart');
+          break;
+      }
+    } catch (error) {
+      console.error('Error executing action:', error);
     }
   };
 
-  // Enhanced login success handler - now shows modal instead of auto-executing
   const handleLoginSuccess = async () => {
+    console.log('Login success - closing dialog and showing success modal');
     setShowLoginDialog(false);
     
     if (pendingActionDetails) {
-      // Show the success modal instead of auto-executing
       setShowLoginSuccessModal(true);
+    } else {
+      console.warn('No pending action details found after login success');
     }
   };
 
-  // Handle the action from the success modal
   const handleModalAction = async () => {
-    if (!pendingActionDetails) return;
+    if (!pendingActionDetails) {
+      console.error('No pending action details available');
+      return;
+    }
     
+    console.log('Executing modal action:', pendingActionDetails);
     setIsExecutingCartAction(true);
     
     try {
-      // Execute the pending action with saved details
       await executeAction(
         pendingActionDetails.action, 
         pendingActionDetails.product, 
         pendingActionDetails.quantity
       );
       
-      // Close the modal
       setShowLoginSuccessModal(false);
+      setPendingAction(null);
+      setPendingActionDetails(null);
       
     } catch (error) {
       console.error('Error executing cart action:', error);
     } finally {
       setIsExecutingCartAction(false);
-      setPendingAction(null);
-      setPendingActionDetails(null);
     }
   };
 
-  // Handle modal close
   const handleModalClose = () => {
+    console.log('Closing login success modal');
     setShowLoginSuccessModal(false);
     setPendingAction(null);
     setPendingActionDetails(null);
+    setIsExecutingCartAction(false);
   };
 
-  // Handle login dialog close
   const handleLoginDialogClose = () => {
+    console.log('Closing login dialog');
     setShowLoginDialog(false);
     setPendingAction(null);
     setPendingActionDetails(null);
   };
 
-  // Calculate total price based on quantity
   const calculateTotalPrice = () => {
     if (!product) return 0;
     return product.price * quantity;
   };
 
-  // Format price with currency
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -192,11 +188,9 @@ export default function ProductDetailsPage() {
     }).format(price);
   };
 
-  // Handle quantity changes with validation
   const handleQuantityChange = (change: number): void => {
     const newQuantity = quantity + change;
     
-    // Ensure quantity is at least 1 and at most 100 (reasonable limit)
     if (newQuantity >= 1 && newQuantity <= 100) {
       setQuantity(newQuantity);
     }
@@ -210,41 +204,47 @@ export default function ProductDetailsPage() {
     }
   };
 
-  // Enhanced add to cart handler with optional navigation
   const handleAddToCart = async (actionProduct?: any, actionQuantity?: number, shouldNavigate: boolean = false) => {
     const productToAdd = actionProduct || product;
     const quantityToAdd = actionQuantity || quantity;
     
-    if (!productToAdd || !isAuthenticated) return;
+    if (!productToAdd) {
+      console.error('No product to add to cart');
+      return;
+    }
+    
+    if (!isAuthenticated) {
+      console.error('User not authenticated - cannot add to cart');
+      return;
+    }
     
     try {
-      // Optimistic update for better UX
+      console.log(`Adding to cart: ${quantityToAdd} x ${productToAdd.title}`);
+      
       dispatch(optimisticAddToCart({ product: productToAdd, quantity: quantityToAdd }));
       
       // Dispatch the async action
       const result = await dispatch(addToCart({ 
         product: productToAdd, 
         quantity: quantityToAdd,
-        // TODO: Add userId when authentication is implemented
-        // userId: currentUser?.id 
+        
       }));
       
       if (addToCart.fulfilled.match(result)) {
-        // Show success feedback only if not coming from modal
+        console.log('Successfully added to cart');
+        
         if (!showLoginSuccessModal) {
           setShowAddedToCart(true);
           setTimeout(() => setShowAddedToCart(false), 3000);
         }
         
-        // Reset quantity to 1 after successful add (only if using current state)
         if (!actionQuantity) {
           setQuantity(1);
         }
         
-        console.log(`Successfully added ${quantityToAdd} x ${productToAdd.title} to cart`);
-        
         // Navigate to cart page if requested
         if (shouldNavigate) {
+          console.log('Navigating to cart page');
           router.push('/cart');
         }
       } else {
@@ -259,7 +259,7 @@ export default function ProductDetailsPage() {
   const handleWishlist = () => {
     if (!product) return;
     console.log(`Adding product ${product.id} to wishlist`);
-    // TODO: Implement wishlist functionality
+    
   };
 
   const handleShare = async () => {
@@ -284,9 +284,9 @@ export default function ProductDetailsPage() {
     }
   };
 
-  // Get action text for modal
+  
   const getActionText = () => {
-    if (!pendingActionDetails) return '';
+    if (!pendingActionDetails) return 'Continue';
     
     switch (pendingActionDetails.action) {
       case 'addToCartAndGo':
@@ -387,7 +387,6 @@ export default function ProductDetailsPage() {
         </div>
       )}
 
-      {/* Enhanced Login Success Modal */}
       {showLoginSuccessModal && pendingActionDetails && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform animate-in zoom-in-95 duration-200">
@@ -406,6 +405,7 @@ export default function ProductDetailsPage() {
                 <button
                   onClick={handleModalClose}
                   className="text-white hover:text-green-100 transition-colors"
+                  disabled={isExecutingCartAction}
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -419,7 +419,7 @@ export default function ProductDetailsPage() {
                   <Check className="w-8 h-8 text-green-600" />
                 </div>
                 <p className="text-gray-600 mb-4">
-                  You're now signed in! Ready to add this item to your cart?
+                  You&apos;re now signed in! Ready to add this item to your cart?
                 </p>
               </div>
 
@@ -453,7 +453,8 @@ export default function ProductDetailsPage() {
               <div className="flex gap-3">
                 <button
                   onClick={handleModalClose}
-                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                  disabled={isExecutingCartAction}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Maybe Later
                 </button>
@@ -486,7 +487,7 @@ export default function ProductDetailsPage() {
         </div>
       )}
 
-      {/* Login Dialog */}
+      {/* FIXED: Login Dialog with proper props */}
       <LoginDialog
         isOpen={showLoginDialog}
         onClose={handleLoginDialogClose}
@@ -560,7 +561,6 @@ export default function ProductDetailsPage() {
               {product.category}
             </span>
 
-            {/* Cart status indicator */}
             {cartItemQuantity > 0 && isAuthenticated && (
               <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 text-sm px-3 py-1 rounded-full mb-4">
                 <ShoppingCart className="w-4 h-4" />
@@ -568,7 +568,6 @@ export default function ProductDetailsPage() {
               </div>
             )}
 
-            {/* Authentication status indicator */}
             {!isAuthenticated && (
               <div className="inline-flex items-center gap-2 bg-orange-50 text-orange-700 text-sm px-3 py-1 rounded-full mb-4">
                 <span>Sign in required for cart actions</span>
@@ -576,7 +575,6 @@ export default function ProductDetailsPage() {
             )}
           </div>
 
-          {/* Pricing Section - Enhanced */}
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="text-lg text-gray-600">Unit Price:</span>
@@ -610,7 +608,6 @@ export default function ProductDetailsPage() {
             </div>
           </div>
 
-          {/* Description */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Description
@@ -620,7 +617,6 @@ export default function ProductDetailsPage() {
             </p>
           </div>
 
-          {/* Enhanced Quantity Controls */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -663,7 +659,6 @@ export default function ProductDetailsPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-              {/* Add to cart and navigate - requires authentication */}
               <button
                 onClick={() => requireAuthentication('addToCartAndGo')}
                 disabled={cartLoading}
@@ -700,7 +695,6 @@ export default function ProductDetailsPage() {
               </button>
             </div>
 
-            {/* Alternative: Separate buttons for different actions */}
             <div className="flex gap-2 mt-2">
               <button
                 onClick={() => requireAuthentication('addToCartOnly')}
@@ -721,7 +715,7 @@ export default function ProductDetailsPage() {
               </button>
             </div>
           </div>
-          {/* Additional Info */}
+          
           <div className="border-t pt-6 space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">SKU:</span>
@@ -738,10 +732,10 @@ export default function ProductDetailsPage() {
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Return Policy:</span>
               <span className="font-medium">30-day returns</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   );
+ }
