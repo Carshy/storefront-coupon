@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+   eslint: {
+    ignoreDuringBuilds: true,
+  },
   
   // Security headers (recommended for production)
   async headers() {

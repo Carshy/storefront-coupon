@@ -22,14 +22,14 @@ export default function ProductsPage() {
     dispatch(fetchCategories());
   }, [dispatch, sortBy]);
 
-  const handleCategoryChange = (category: string | null) => {
-    dispatch(setCurrentCategory(category));
-    if (category) {
-      const filteredProducts = products.filter(product => product.category === category);
-    } else {
-      dispatch(fetchProducts({ sort: sortBy }));
-    }
-  };
+  // const handleCategoryChange = (category: string | null) => {
+  //   dispatch(setCurrentCategory(category));
+  //   if (category) {
+  //     const filteredProducts = products.filter(product => product.category === category);
+  //   } else {
+  //     dispatch(fetchProducts({ sort: sortBy }));
+  //   }
+  // };
 
   const handleSortChange = (sort: 'asc' | 'desc') => {
     setSortBy(sort);

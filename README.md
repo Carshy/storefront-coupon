@@ -1,36 +1,255 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<a name="readme-top"></a>
+<!-- PROJECT LOGO -->
+<div align="center">
+  <a href="https://luxeline-store.vercel.app/">
+    <!-- <img src="public/images/logo.png" alt="luxeline-logo" height="64"> -->
+  </a>
 
+  <h2 align="center">LuxeLine</h2>
+
+  <h4 align="center">  
+    <a href="https://luxeline-store.vercel.app/" target="_blank" rel="noreferrer noopener" >View Live</a>
+    ·
+    <a href="https://github.com/yourusername/luxeline/issues" target="_blank">Report Bug</a>
+  </h4>
+</div>
+
+<!-- ABOUT THE PROJECT -->
+
+LuxeLine is a modern, secure, and performant e-commerce platform that delivers an exceptional online shopping experience. Built with cutting-edge technologies, it features a comprehensive product catalog, intelligent filtering, secure cart management, and responsive design that works seamlessly across all devices.
+
+**Core Functionalities:**
+* Browse products with dynamic filtering by category, price, and ratings
+* Detailed product pages with high-quality images and comprehensive information
+* Secure shopping cart with persistent state management
+* Real-time product search and sorting capabilities
+* Responsive design optimized for mobile, tablet, and desktop
+* Fast loading with Next.js Server-Side Rendering (SSR) and Static Site Generation (SSG)
+* Secure state management with Redux Toolkit
+
+This project showcases modern web development best practices, including TypeScript for type safety, Tailwind CSS for responsive styling, and secure API integration. The application prioritizes performance, accessibility, and user experience.
+
+I thoroughly enjoyed building this modern e-commerce platform and implementing advanced features like dynamic routing, state persistence, and responsive design. Click [Here](https://luxeline-store.vercel.app/) to explore the live application!
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### View Live
+**Below is the live link to the LuxeLine e-commerce platform:**
+- [x] [Vercel Deployment](https://luxeline-store.vercel.app/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Built With
+
+**Main Technologies:**
+
+* ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+* ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+* ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+* ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
+* ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+**Additional Tools & Libraries:**
+* Redux Toolkit for state management
+* Axios for API requests
+* Lucide React for icons
+* Next.js Image optimization
+* Responsive design with Tailwind CSS
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- FEATURES -->
+## Key Features
+
+### 🛍️ **Product Management**
+- **Dynamic Product Listing**: Browse through a curated collection of products with real-time loading
+- **Advanced Filtering**: Filter products by categories (electronics, jewelry, men's clothing, women's clothing)
+- **Smart Search**: Search products by name with instant results
+- **Sorting Options**: Sort by price (low to high, high to low) and ratings
+
+### 🛒 **Shopping Cart**
+- **Persistent Cart**: Cart state maintained across browser sessions
+- **Secure State Management**: Redux-powered cart with optimistic updates
+- **Quantity Management**: Add, remove, and modify item quantities
+- **Real-time Total Calculation**: Dynamic price calculations with tax and shipping
+
+### 📱 **User Experience**
+- **Responsive Design**: Optimized for mobile, tablet, and desktop viewing
+- **Fast Loading**: Server-Side Rendering (SSR) and Static Site Generation (SSG)
+- **Progressive Enhancement**: Works seamlessly with and without JavaScript
+- **Accessibility**: WCAG compliant with proper ARIA labels and keyboard navigation
+
+### 🔒 **Security & Performance**
+- **Type Safety**: Full TypeScript implementation for reduced runtime errors
+- **Secure API Integration**: Protected endpoints with proper error handling
+- **Performance Optimization**: Image optimization, lazy loading, and code splitting
+- **Error Boundaries**: Graceful error handling with user-friendly messages
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+Make sure you have Node.js installed on your system:
+* Node.js (version 18 or higher)
+  ```sh
+  node --version
+  ```
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Clone Locally
+- Enter this URL: [https://github.com/yourusername/luxeline](https://github.com/yourusername/luxeline) in your web browser
+- Navigate to the green "Code" button on the right side of the repository
+- Select "Download ZIP" option from the dropdown menu
+- Extract the downloaded ZIP file to access the project locally
+
+### Installation & Setup
+
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/yourusername/luxeline.git
+   cd luxeline
+   ```
+
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
+
+3. **Environment setup**
+   ```sh
+   cp .env.example .env.local
+   ```
+   Add your environment variables:
+   ```env
+   NEXT_PUBLIC_API_URL=https://fakestoreapi.com
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   ```
+
+4. **Start the development server**
+   ```sh
+   npm run dev
+   ```
+
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000) to view the application
+
+### Build for Production
+```sh
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<!-- PROJECT STRUCTURE -->
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+luxeline/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── products/          # Product pages
+│   │   ├── cart/              # Shopping cart
+│   │   └── layout.tsx         # Root layout
+│   ├── components/            # Reusable components
+│   │   ├── product/          # Product-specific components
+│   │   ├── ui/               # Base UI components
+│   │   └── layout/           # Layout components
+│   ├── lib/                  # Utilities and configurations
+│   │   ├── store/            # Redux store setup
+│   │   ├── api/              # API functions
+│   │   └── types.ts          # TypeScript definitions
+│   └── hooks/                # Custom React hooks
+├── public/                   # Static assets
+└── tailwind.config.js       # Tailwind configuration
+```
 
-## Learn More
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-To learn more about Next.js, take a look at the following resources:
+<!-- CONTRIBUTING -->
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-## Deploy on Vercel
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Development Guidelines
+- Follow TypeScript best practices
+- Maintain responsive design principles
+- Write clean, readable code with proper comments
+- Ensure all new features are tested
+- Follow the existing code style and structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ROADMAP -->
+## Roadmap
+
+### Phase 1 (Current)
+- [x] Product listing and filtering
+- [x] Shopping cart functionality
+- [x] Responsive design
+- [x] TypeScript implementation
+
+### Phase 2 (Upcoming)
+- [ ] User authentication and profiles
+- [ ] Order history and tracking
+- [ ] Payment gateway integration
+- [ ] Product reviews and ratings
+- [ ] Wishlist functionality
+- [ ] Advanced search with autocomplete
+
+### Phase 3 (Future)
+- [ ] Admin dashboard
+- [ ] Inventory management
+- [ ] Multi-language support
+- [ ] PWA capabilities
+- [ ] Advanced analytics
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+## License
+
+This project is distributed under the MIT License. [Click here for more information](LICENSE).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
+## Contact
+### 👤 [Your Name]
+
+[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yourprofile/) 
+[![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://x.com/yourhandle) 
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yourusername) 
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your.email@gmail.com)
+
+**Project Link**: [https://github.com/yourusername/luxeline](https://github.com/yourusername/luxeline)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+* [Fake Store API](https://fakestoreapi.com/) - RESTful API for e-commerce prototyping
+* [Next.js Documentation](https://nextjs.org/docs) - React framework for production
+* [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+* [Redux Toolkit](https://redux-toolkit.js.org/) - Modern Redux development
+* [Lucide React](https://lucide.dev/) - Beautiful and consistent icons
+* [Vercel](https://vercel.com/) - Deployment and hosting platform
+* [TypeScript](https://www.typescriptlang.org/) - Type safety for JavaScript
+* [React Documentation](https://react.dev/) - Component-based UI library
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>

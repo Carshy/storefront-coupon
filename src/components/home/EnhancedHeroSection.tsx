@@ -296,70 +296,57 @@ export default function EnhancedHeroSection() {
           </div>
 
           {/* Right Column - Featured Products (Fixed height for large devices) */}
-          <div className="lg:col-span-3 w-full lg:min-h-[18rem]">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-50/90 to-white/90 backdrop-blur-sm p-3 sm:p-4 transform hover:scale-[1.02] transition-all duration-500 cursor-pointer group shadow-lg hover:shadow-xl border border-white/50 h-[280px] sm:h-[320px] lg:h-full flex flex-col">
-              {/* Subtle overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/10"></div>
+          <div className="lg:col-span-3 w-full">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-50/90 to-white/90 backdrop-blur-sm p-3 sm:p-4 transform hover:scale-[1.02] transition-all duration-500 cursor-pointer group shadow-lg hover:shadow-xl border border-white/50 h-auto flex flex-col max-h-[600px]">
               
-              {/* Sparkle effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/10 pointer-events-none"></div>
+
               <div className="absolute top-3 right-3 opacity-30 group-hover:opacity-50 transition-all duration-300">
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
               </div>
-              
-              {/* Content - Properly sized to fit container */}
-              <div className="relative z-10 flex flex-col h-full space-y-2 sm:space-y-3">
-                
-                {/* Header Section - Fixed height */}
-                <div className="flex-shrink-0">
-                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-800 text-center tracking-wide">
+
+              <div className="relative z-10 flex flex-col h-full gap-2 sm:gap-3">
+                <div className="flex-shrink-0 text-center">
+                  <h3 className="text-xs sm:text-sm md:text-base font-bold text-gray-800 tracking-wide">
                     Featured Products
                   </h3>
                 </div>
-                
-                {/* Products Grid - Takes remaining space */}
-                <div className="flex-1 min-h-0 overflow-hidden">
-                  {/* Mobile: 2 columns, Tablet: 2 columns, Desktop: 2 columns */}
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3 h-full">
-                    {featuredProducts.slice(0, 4).map((product, index) => (
+
+                <div className="flex-1">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                    {featuredProducts.slice(0, 2).map((product) => (
                       <Link
                         key={product.id}
                         href={`/products/${product.id}`}
-                        className="group h-full flex flex-col"
+                        className="group flex flex-col h-full"
                       >
-                        <div className="bg-white/80 backdrop-blur-md rounded-xl p-2 sm:p-3 border border-gray-200/60 hover:bg-white/95 hover:shadow-md transition-all duration-300 hover:scale-105 h-full flex flex-col group-hover:border-gray-300/80">
-                          
-                          {/* Product Image - Flexible aspect ratio */}
-                          <div className="relative w-full flex-shrink-0 rounded-lg overflow-hidden mb-2 bg-gray-50/80" style={{ aspectRatio: '1/1' }}>
+                        <div className="bg-white/80 backdrop-blur-md rounded-xl p-2 sm:p-2 border border-gray-200/60 hover:bg-white/95 hover:shadow-md transition-all duration-300 hover:scale-105 flex flex-col h-full">
+                          <div className="relative w-full rounded-lg overflow-hidden mb-1 sm:mb-2 bg-gray-50/80 aspect-square">
                             <Image
                               src={product.image}
                               alt={product.title}
                               fill
-                              className="object-contain p-1 sm:p-2 group-hover:scale-110 transition-transform duration-300"
+                              className="object-contain p-1 sm:p-1.5 group-hover:scale-105 transition-transform duration-300"
                             />
                           </div>
-                          
-                          {/* Product Info - Takes remaining space */}
-                          <div className="flex-1 flex flex-col justify-between min-h-0">
-                            
-                            {/* Product Title - Responsive text sizing */}
-                            <h4 className="font-semibold text-[10px] sm:text-xs lg:text-sm mb-1 sm:mb-2 line-clamp-2 text-gray-800 leading-tight">
+
+                          <div className="flex-1 flex flex-col justify-between">
+                            <h4 className="font-semibold text-[9px] sm:text-[10px] md:text-xs mb-1 line-clamp-2 text-gray-800 leading-tight">
                               {product.title.length > 25 
                                 ? `${product.title.substring(0, 25)}...` 
-                                : product.title
-                              }
+                                : product.title}
                             </h4>
-                            
-                            {/* Price and Rating - Bottom aligned */}
+
                             <div className="mt-auto space-y-1">
-                              <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-green-600 text-center">
+                              <div className="text-[9px] sm:text-[10px] font-bold text-green-600 text-center">
                                 {formatPrice(product.price)}
                               </div>
                               <div className="flex items-center justify-center space-x-1">
-                                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-500 fill-current flex-shrink-0" />
-                                <span className="text-[9px] sm:text-xs text-gray-600 font-medium">
+                                <Star className="w-2.5 h-2.5 text-orange-500 fill-current" />
+                                <span className="text-[8px] sm:text-[9px] text-gray-600 font-medium">
                                   {product.rating.rate.toFixed(1)}
                                 </span>
-                                <span className="text-[8px] sm:text-[10px] text-gray-500">
+                                <span className="text-[7px] sm:text-[8px] text-gray-500">
                                   ({product.rating.count})
                                 </span>
                               </div>
@@ -370,25 +357,27 @@ export default function EnhancedHeroSection() {
                     ))}
                   </div>
                 </div>
-                
-                {/* View All Button - Fixed at bottom */}
+
                 <div className="flex-shrink-0 pt-1 sm:pt-2">
                   <Link 
                     href="/products"
-                    className="block bg-gradient-to-r from-gray-600 to-gray-800 text-white text-center py-2 sm:py-2.5 rounded-xl font-medium text-xs sm:text-sm hover:from-gray-700 hover:to-gray-900 transition-all duration-300 hover:shadow-lg transform hover:scale-[1.02]"
+                    className="block bg-gradient-to-r from-gray-600 to-gray-800 text-white text-center py-1.5 sm:py-2 rounded-xl font-medium text-[10px] sm:text-xs hover:from-gray-700 hover:to-gray-900 transition-all duration-300 hover:shadow-lg transform hover:scale-[1.02]"
                   >
                     View All Products
                   </Link>
                 </div>
               </div>
-              
-              {/* Refined border - Same as left column */}
-              <div className="absolute inset-0 rounded-3xl border border-gray-200/60 group-hover:border-gray-300/80 transition-all duration-300"></div>
-              
-              {/* Subtle inner highlight */}
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.05)'}}></div>
+
+              {/* Outer Border */}
+              <div className="absolute inset-0 rounded-3xl border border-gray-200/60 group-hover:border-gray-300/80 transition-all duration-300 pointer-events-none"></div>
+
+              {/* Subtle Inner Highlight */}
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{ boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.05)' }}></div>
             </div>
           </div>
+
+
+
         </div>
       </div>
     </section>

@@ -21,7 +21,7 @@ export default function CategoriesPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <p className="text-gray-600">
-            Browse through our carefully curated categories to find exactly what you're looking for.
+            Browse through our carefully curated categories to find exactly what you&apos;re looking for.
           </p>
         </div>
       </div>

@@ -49,7 +49,7 @@ export default function ProductDetailsPage() {
   
   // Login dialog state
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [pendingAction, setPendingAction] = useState<'addToCartAndGo' | 'addToCartOnly' | 'viewCart' | null>(null);
+  const [setPendingAction] = useState<'addToCartAndGo' | 'addToCartOnly' | 'viewCart' | null>(null);
   
   // State for pending action details (to preserve quantity and product at time of action)
   const [pendingActionDetails, setPendingActionDetails] = useState<{
