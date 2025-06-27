@@ -1,10 +1,8 @@
-// src/lib/api/products.ts
 import axiosInstance from './axiosInstance';
 import { Product, FetchProductsParams, ProductsApiResponse, CategoriesApiResponse } from '../types';
 
-// Products API functions
+
 export const productsApi = {
-  // Get all products with optional parameters
   getAll: async (params?: FetchProductsParams): Promise<Product[]> => {
     try {
       const response = await axiosInstance.get<ProductsApiResponse>('/products', {
@@ -20,7 +18,6 @@ export const productsApi = {
     }
   },
 
-  // Get single product by ID
   getById: async (id: number): Promise<Product> => {
     try {
       const response = await axiosInstance.get<Product>(`/products/${id}`);
@@ -68,14 +65,11 @@ interface CacheEntry<T> {
   timestamp: number;
 }
 
-// Enhanced Type-safe cache implementation
 class TypedCache {
   private productsCache = new Map<string, CacheEntry<Product[]>>();
   private categoriesCache = new Map<string, CacheEntry<string[]>>();
-  // FIXED: Added single product cache
   private singleProductCache = new Map<number, CacheEntry<Product>>();
 
-  // Products array cache methods
   setProducts(key: string, data: Product[]): void {
     this.productsCache.set(key, { data, timestamp: Date.now() });
   }
@@ -101,7 +95,6 @@ class TypedCache {
     return null;
   }
 
-  // FIXED: Single product cache methods (needed for getById)
   setSingleProduct(id: number, data: Product): void {
     this.singleProductCache.set(id, { data, timestamp: Date.now() });
   }
@@ -136,9 +129,7 @@ class TypedCache {
 
 const cache = new TypedCache();
 
-// FIXED: Complete cached API with ALL methods
 export const cachedProductsApi = {
-  // Get all products with caching
   getAll: async (params?: FetchProductsParams): Promise<Product[]> => {
     const cacheKey = `products_${JSON.stringify(params || {})}`;
     const cached = cache.getProducts(cacheKey);
@@ -152,7 +143,6 @@ export const cachedProductsApi = {
     return data;
   },
 
-  // FIXED: Added missing getById with caching
   getById: async (id: number): Promise<Product> => {
     const cached = cache.getSingleProduct(id);
     
@@ -179,7 +169,6 @@ export const cachedProductsApi = {
     return data;
   },
 
-  // FIXED: Added missing getByCategory with caching
   getByCategory: async (category: string, params?: Omit<FetchProductsParams, 'category'>): Promise<Product[]> => {
     const cacheKey = `category_${category}_${JSON.stringify(params || {})}`;
     const cached = cache.getProducts(cacheKey);
@@ -193,7 +182,6 @@ export const cachedProductsApi = {
     return data;
   },
 
-  // Cache management utilities
   clearCache: () => {
     cache.clear();
   },
@@ -211,5 +199,4 @@ export const cachedProductsApi = {
   },
 };
 
-// Export cache instance for advanced usage
 export { cache };

@@ -2,10 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { User, AuthState, ApiError } from '../../types';
 import { secureUsersApi, LoginCredentials, RegisterData, SecureTokenManager } from '../../api/users';
 
-// Import RootState type
 import type { RootState } from '../index';
 
-// Initial state
 const initialState: AuthState = {
   user: null,
   token: null,
@@ -14,7 +12,6 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Async thunks for authentication actions
 export const loginUser = createAsyncThunk<
   { user: User; token: string },
   LoginCredentials,
@@ -56,8 +53,6 @@ export const registerUser = createAsyncThunk<
   'user/register',
   async (userData, { rejectWithValue }) => {
     try {
-      // Note: Fake Store API doesn't actually create users, 
-      // but we'll simulate the process
       const user = await secureUsersApi.login({
         username: userData.username,
         password: userData.password,
@@ -78,7 +73,6 @@ export const checkAuthStatus = createAsyncThunk<
   'user/checkStatus',
   async (_, { rejectWithValue }) => {
     try {
-      // Check if user is authenticated and token is valid
       const isAuth = await secureUsersApi.checkAndRefreshToken();
       if (isAuth) {
         const user = secureUsersApi.getCurrentUser();
@@ -118,17 +112,14 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    // Clear error
     clearError: (state) => {
       state.error = null;
     },
     
-    // Set loading state
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
     
-    // Initialize auth state from stored data
     initializeAuth: (state) => {
       const isAuthenticated = SecureTokenManager.isAuthenticated();
       const user = SecureTokenManager.getUser();
@@ -141,7 +132,6 @@ const userSlice = createSlice({
       state.error = null;
     },
     
-    // Update user profile
     updateUserProfile: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
@@ -149,7 +139,6 @@ const userSlice = createSlice({
       }
     },
     
-    // Force logout (for security purposes)
     forceLogout: (state) => {
       state.user = null;
       state.token = null;
@@ -161,7 +150,6 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Login cases
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -181,7 +169,6 @@ const userSlice = createSlice({
         state.error = action.payload || 'Login failed';
       })
       
-      // Logout cases
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
       })
@@ -194,14 +181,12 @@ const userSlice = createSlice({
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
-        // Even if logout fails on server, clear local state
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
         state.error = action.payload || 'Logout failed';
       })
       
-      // Register cases
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -217,7 +202,6 @@ const userSlice = createSlice({
         state.error = action.payload || 'Registration failed';
       })
       
-      // Check auth status cases
       .addCase(checkAuthStatus.pending, (state) => {
         state.loading = true;
       })
@@ -242,7 +226,6 @@ const userSlice = createSlice({
         state.error = action.payload || 'Auth check failed';
       })
       
-      // Refresh token cases
       .addCase(refreshToken.pending, (state) => {
         state.loading = false
       })
@@ -251,7 +234,6 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(refreshToken.rejected, (state, action) => {
-        // Token refresh failed, force logout
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
