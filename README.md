@@ -10,7 +10,7 @@
   <h4 align="center">  
     <a href="https://luxeline-store.vercel.app/" target="_blank" rel="noreferrer noopener" >View Live</a>
     ·
-    <a href="https://github.com/yourusername/luxeline/issues" target="_blank">Report Bug</a>
+    <a href="https://github.com/Carshy/storefront-coupon/issues" target="_blank">Report Bug</a>
   </h4>
 </div>
 
@@ -102,7 +102,7 @@ Make sure you have Node.js installed on your system:
   ```
 
 ### Clone Locally
-- Enter this URL: [https://github.com/yourusername/luxeline](https://github.com/yourusername/luxeline) in your web browser
+- Enter this URL: [https://github.com/Carshy/storefront-coupon](https://github.com/Carshy/storefront-coupon) in your web browser
 - Navigate to the green "Code" button on the right side of the repository
 - Select "Download ZIP" option from the dropdown menu
 - Extract the downloaded ZIP file to access the project locally
@@ -111,7 +111,7 @@ Make sure you have Node.js installed on your system:
 
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/yourusername/luxeline.git
+   git clone https://github.com/Carshy/storefront-coupon.git
    cd luxeline
    ```
 
@@ -146,29 +146,6 @@ npm start
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- PROJECT STRUCTURE -->
-## Project Structure
-
-```
-luxeline/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── products/          # Product pages
-│   │   ├── cart/              # Shopping cart
-│   │   └── layout.tsx         # Root layout
-│   ├── components/            # Reusable components
-│   │   ├── product/          # Product-specific components
-│   │   ├── ui/               # Base UI components
-│   │   └── layout/           # Layout components
-│   ├── lib/                  # Utilities and configurations
-│   │   ├── store/            # Redux store setup
-│   │   ├── api/              # API functions
-│   │   └── types.ts          # TypeScript definitions
-│   └── hooks/                # Custom React hooks
-├── public/                   # Static assets
-└── tailwind.config.js       # Tailwind configuration
-```
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
@@ -202,14 +179,14 @@ Don't forget to give the project a star! Thanks again!
 - [x] Shopping cart functionality
 - [x] Responsive design
 - [x] TypeScript implementation
+- [x] User authentication and profiles
+- [x] Advanced search with autocomplete
 
 ### Phase 2 (Upcoming)
-- [ ] User authentication and profiles
 - [ ] Order history and tracking
 - [ ] Payment gateway integration
 - [ ] Product reviews and ratings
 - [ ] Wishlist functionality
-- [ ] Advanced search with autocomplete
 
 ### Phase 3 (Future)
 - [ ] Admin dashboard
@@ -228,15 +205,8 @@ This project is distributed under the MIT License. [Click here for more informat
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
-## Contact
-### 👤 [Your Name]
 
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yourprofile/) 
-[![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://x.com/yourhandle) 
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yourusername) 
-[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your.email@gmail.com)
-
-**Project Link**: [https://github.com/yourusername/luxeline](https://github.com/yourusername/luxeline)
+**Project Link**: [https://github.com/Carshy/storefront-coupon](https://github.com/Carshy/storefront-coupon)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
