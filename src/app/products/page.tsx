@@ -9,7 +9,7 @@ import { Filter, Grid, List } from 'lucide-react';
 
 export default function ProductsPage() {
   const dispatch = useAppDispatch();
-  const { products, categories, loading, error, currentCategory } = useAppSelector(
+  const { products, loading, error, currentCategory } = useAppSelector(
     (state) => state.products
   );
   
@@ -22,15 +22,14 @@ export default function ProductsPage() {
     dispatch(fetchCategories());
   }, [dispatch, sortBy]);
 
-  const handleCategoryChange = (category: string | null) => {
-    dispatch(setCurrentCategory(category));
-    if (category) {
-      // Filter products by category (you can implement this in the slice)
-      const filteredProducts = products.filter(product => product.category === category);
-    } else {
-      dispatch(fetchProducts({ sort: sortBy }));
-    }
-  };
+  // const handleCategoryChange = (category: string | null) => {
+  //   dispatch(setCurrentCategory(category));
+  //   if (category) {
+  //     const filteredProducts = products.filter(product => product.category === category);
+  //   } else {
+  //     dispatch(fetchProducts({ sort: sortBy }));
+  //   }
+  // };
 
   const handleSortChange = (sort: 'asc' | 'desc') => {
     setSortBy(sort);
@@ -54,18 +53,14 @@ export default function ProductsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className='flex justify-between items-center bg-white p-3'>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Our Products</h1>
           <p className="text-gray-600">Discover our amazing collection of products</p>
         </div>
-        {/* Filters and Controls */}
         <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
-          {/* Controls */}
           <div className="flex items-center gap-4">
-            {/* Sort Control */}
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
               <select
@@ -78,7 +73,6 @@ export default function ProductsPage() {
               </select>
             </div>
 
-            {/* View Mode Toggle */}
             <div className="flex items-center border rounded-md">
               <button
                 onClick={() => setViewMode('grid')}
@@ -105,8 +99,6 @@ export default function ProductsPage() {
         </div>
       </div>
 
-
-      {/* Products Count */}
       <div className="flex mb-6 justify-center items-center bg-orange-500 p-3">
         <p className="text-white">
           Showing {filteredProducts.length} products
@@ -116,7 +108,6 @@ export default function ProductsPage() {
         </p>
       </div>
 
-      {/* Products Grid */}
       <ProductGrid products={filteredProducts} loading={loading} />
     </div>
   );

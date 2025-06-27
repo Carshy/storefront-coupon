@@ -1,4 +1,3 @@
-// src/components/product/ProductGrid.tsx
 'use client';
 
 import { Product } from '@/lib/types';

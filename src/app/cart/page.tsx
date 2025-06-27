@@ -30,12 +30,13 @@ import {
   ShoppingBag,
   RefreshCw
 } from 'lucide-react';
+import CartProtectedWrapper from '../../components/protected/ProtectedWrapper';
+import LogoutDialog from '../../components/auth/LogoutDialog';
 
-export default function ShoppingCartPage() {
+function ShoppingCartContent() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   
-  // Get cart data from Redux store
   const cartItems = useAppSelector(selectCartItems);
   const cartTotal = useAppSelector(selectCartTotal);
   const cartItemCount = useAppSelector(selectCartItemCount);
@@ -43,16 +44,14 @@ export default function ShoppingCartPage() {
   const cartError = useAppSelector(selectCartError);
   const cartSummary = useAppSelector(selectCartSummary);
 
-  // Local state for UI interactions
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
-  // Load cart on component mount
   useEffect(() => {
     dispatch(loadCart());
   }, [dispatch]);
 
-  // Format price with currency
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -60,7 +59,6 @@ export default function ShoppingCartPage() {
     }).format(price);
   };
 
-  // Handle quantity update
   const handleQuantityUpdate = async (productId: number, newQuantity: number) => {
     if (newQuantity < 1) {
       handleRemoveItem(productId);
@@ -73,7 +71,6 @@ export default function ShoppingCartPage() {
       await dispatch(updateCartQuantity({ 
         productId, 
         quantity: newQuantity,
-        // TODO: Add userId when authentication is implemented
       }));
     } catch (error) {
       console.error('Error updating quantity:', error);
@@ -86,14 +83,12 @@ export default function ShoppingCartPage() {
     }
   };
 
-  // Handle item removal
   const handleRemoveItem = async (productId: number) => {
     setUpdatingItems(prev => new Set(prev).add(productId));
     
     try {
       await dispatch(removeFromCart({ 
         productId,
-        // TODO: Add userId when authentication is implemented
       }));
     } catch (error) {
       console.error('Error removing item:', error);
@@ -106,7 +101,6 @@ export default function ShoppingCartPage() {
     }
   };
 
-  // Handle clear cart
   const handleClearCart = async () => {
     try {
       await dispatch(clearCart());
@@ -116,16 +110,20 @@ export default function ShoppingCartPage() {
     }
   };
 
-  // Handle checkout (placeholder)
   const handleCheckout = () => {
-    // TODO: Implement checkout functionality
-    console.log('Proceeding to checkout with items:', cartItems);
-    alert('Checkout functionality coming soon!');
+    setShowLogoutDialog(true);
   };
 
-  // Calculate savings (placeholder - could be based on discounts)
+  const handleLogoutDialogClose = () => {
+    setShowLogoutDialog(false);
+  };
+
+  const handleGoHome = () => {
+    setShowLogoutDialog(false);
+    router.push('/');
+  };
+
   const calculateSavings = () => {
-    // This is a placeholder - in a real app, you'd calculate based on discounts
     return 0;
   };
 
@@ -138,7 +136,7 @@ export default function ShoppingCartPage() {
             <ShoppingBag className="w-24 h-24 text-gray-300 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h1>
             <p className="text-gray-600 mb-6">
-              Looks like you haven't added any items to your cart yet. 
+              Looks like you haven&apos;t added any items to your cart yet. 
               Start shopping to fill it up!
             </p>
           </div>
@@ -164,7 +162,6 @@ export default function ShoppingCartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
@@ -193,7 +190,6 @@ export default function ShoppingCartPage() {
           </div>
         </div>
 
-        {/* Cart sync status */}
         {cartSummary.syncStatus === 'syncing' && (
           <div className="flex items-center gap-2 text-blue-600 text-sm">
             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -202,7 +198,6 @@ export default function ShoppingCartPage() {
         )}
       </div>
 
-      {/* Error state */}
       {cartError && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-center gap-2 text-red-700">
@@ -218,7 +213,6 @@ export default function ShoppingCartPage() {
         </div>
       )}
 
-      {/* Loading state */}
       {cartLoading && cartItems.length === 0 ? (
         <div className="text-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-orange-500 mx-auto mb-4" />
@@ -226,7 +220,6 @@ export default function ShoppingCartPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
           <div className="lg:col-span-2">
             <div className="space-y-4">
               {cartItems.map((item) => {
@@ -240,7 +233,6 @@ export default function ShoppingCartPage() {
                     }`}
                   >
                     <div className="flex gap-4">
-                      {/* Product Image */}
                       <div className="w-24 h-24 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
                         <Image
                           src={item.product.image}
@@ -251,7 +243,6 @@ export default function ShoppingCartPage() {
                         />
                       </div>
 
-                      {/* Product Details */}
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex-1 min-w-0 pr-4">
@@ -277,7 +268,6 @@ export default function ShoppingCartPage() {
                         </div>
 
                         <div className="flex items-center justify-between">
-                          {/* Quantity Controls */}
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleQuantityUpdate(item.product.id, item.quantity - 1)}
@@ -304,7 +294,6 @@ export default function ShoppingCartPage() {
                             </button>
                           </div>
 
-                          {/* Price */}
                           <div className="text-right">
                             <div className="font-semibold text-gray-900">
                               {formatPrice(item.product.price * item.quantity)}
@@ -324,7 +313,6 @@ export default function ShoppingCartPage() {
             </div>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-gray-50 rounded-lg p-6 sticky top-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
@@ -368,7 +356,6 @@ export default function ShoppingCartPage() {
                 </div>
               </div>
 
-              {/* Free shipping notice */}
               {cartTotal < 50 && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
                   <p className="text-sm text-blue-700">
@@ -438,6 +425,24 @@ export default function ShoppingCartPage() {
           </div>
         </div>
       )}
+
+      {/* Logout Dialog */}
+      <LogoutDialog
+        isOpen={showLogoutDialog}
+        onClose={handleLogoutDialogClose}
+        onGoHome={handleGoHome}
+        title="Complete Checkout"
+        subtitle="Finalize your order and logout securely"
+      />
     </div>
+  );
+}
+
+// Main exported component with protection
+export default function ShoppingCartPage() {
+  return (
+    <CartProtectedWrapper>
+      <ShoppingCartContent />
+    </CartProtectedWrapper>
   );
 }
