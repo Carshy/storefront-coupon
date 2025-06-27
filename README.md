@@ -1,14 +1,14 @@
 <a name="readme-top"></a>
 <!-- PROJECT LOGO -->
 <div align="center">
-  <a href="https://luxeline-store.vercel.app/">
+  <a href="https://luxelined.netlify.app/">
     <!-- <img src="public/images/logo.png" alt="luxeline-logo" height="64"> -->
   </a>
 
   <h2 align="center">LuxeLine</h2>
 
   <h4 align="center">  
-    <a href="https://luxeline-store.vercel.app/" target="_blank" rel="noreferrer noopener" >View Live</a>
+    <a href="https://luxelined.netlify.app/" target="_blank" rel="noreferrer noopener" >View Live</a>
     ·
     <a href="https://github.com/Carshy/storefront-coupon/issues" target="_blank">Report Bug</a>
   </h4>
@@ -35,7 +35,7 @@ I thoroughly enjoyed building this modern e-commerce platform and implementing a
 
 ### View Live
 **Below is the live link to the LuxeLine e-commerce platform:**
-- [x] [Vercel Deployment](https://luxeline-store.vercel.app/)
+- [x] [Luxelined Deployment](https://luxelined.netlify.app/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
