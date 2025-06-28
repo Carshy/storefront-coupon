@@ -198,10 +198,10 @@ export default function EnhancedHeroSection() {
                       <div className="text-[clamp(0.75rem,2.5vw,1rem)] font-semibold text-gray-700">
                         Extra discount for <span className="font-black text-gray-700 text-[clamp(0.9rem,3vw,1.2rem)]">100k+</span> items!
                       </div>
-                      <div className="flex items-center justify-center group/cta cursor-pointer bg-gray-700 text-white px-[4%] py-[2%] rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
-                        <span className="text-[clamp(0.75rem,2.5vw,1rem)] font-bold tracking-wide whitespace-nowrap">Unlock Savings</span>
+                      <Link href="/contact" className="flex items-center justify-center group/cta cursor-pointer bg-gray-700 text-white px-[4%] py-[2%] rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+                        <span className="text-[clamp(0.75rem,2.5vw,1rem)] font-bold tracking-wide whitespace-nowrap">More Details</span>
                         <ChevronRight className="w-[clamp(0.8rem,2.5vw,1.2rem)] h-[clamp(0.8rem,2.5vw,1.2rem)] ml-[0.5rem] text-white transform group-hover/cta:translate-x-1 transition-transform duration-300 flex-shrink-0" />
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </div>
